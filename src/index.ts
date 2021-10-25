@@ -11,8 +11,7 @@ export default class WebsiteComponent extends Base {
    * 部署
    * @param inputs
    */
-  async deploy(inputs: InputProps, ...args) {
-    console.log(args);
+  async deploy(inputs: InputProps) {
     let credentials = get(inputs, 'credentials');
     if (isEmpty(credentials)) {
       credentials = await getCredential(inputs, inputs.project.access);

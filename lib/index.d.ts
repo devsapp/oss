@@ -5,7 +5,7 @@ export default class WebsiteComponent extends Base {
      * 部署
      * @param inputs
      */
-    deploy(inputs: InputProps, ...args: any[]): Promise<{
+    deploy(inputs: InputProps): Promise<{
         Region: any;
         Bucket: any;
         Domain: string;
