@@ -1,0 +1,13 @@
+edition: 1.0.0
+services:
+  website:
+    component: ../lib
+    access: default
+    props:
+      bucket: hfs-oss-bucket
+      src:
+        codeUri: './'
+        publishDir: './build'
+        index: index.html
+        error: index.html
+      region: cn-hangzhou

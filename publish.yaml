@@ -1,0 +1,140 @@
+Type: Component
+Name: website-oss
+Provider:
+  - 阿里云
+Version: 0.0.1
+Description: 阿里云静态资源组件，帮助您快速部署静态资源项目
+HomePage: https://github.com/devsapp/website
+Tags:
+  - 静态网站
+Category: 基础云服务
+Commands:
+  deploy: 部署静态资源项目
+Properties:
+  bucket:
+    Description: OSS Bucket
+    Required: True
+    Type:
+      - String
+  region:
+    Description: 地域
+    Required: false
+    Default: cn-hangzhou
+    Type:
+      - Enum:
+          - cn-beijing
+          - cn-hangzhou
+          - cn-shanghai
+          - cn-qingdao
+          - cn-zhangjiakou
+          - cn-huhehaote
+          - cn-shenzhen
+          - cn-chengdu
+          - cn-hongkong
+          - ap-southeast-1
+          - ap-southeast-2
+          - ap-southeast-3
+          - ap-southeast-5
+          - ap-northeast-1
+          - eu-central-1
+          - eu-west-1
+          - us-west-1
+          - us-east-1
+          - ap-south-1
+  src:
+    Description: 执行目录
+    Required: true
+    Type:
+      - Struct:
+          codeUri:
+            Required: false
+            Description: 代码路径
+            Type:
+              - String
+          publishDir:
+            Required: true
+            Description: 钩子脚本执行构建后，输出的目录
+            Type:
+              - String
+          index:
+            Required: false
+            Description: 默认首页
+            Default: index.html
+            Type:
+              - String
+          error:
+            Required: false
+            Description: 默认 404 页
+            Default: error.html
+            Type:
+              - String
+          subDir:
+            Required: false
+            Description: 访问子目录时，是否支持转至子目录下的默认主页。
+            Type:
+              - Struct:
+                  Required: True
+                  Description: 设置默认主页后，访问以非正斜线（/）结尾的Object，且该Object不存在时的行为。
+                  Type:
+                    - Enum:
+                        - redirect
+                        - noSuchKey
+                        - index
+  hosts:
+    Description: CDN 加速域名配置
+    Required: false
+    Type:
+      - List<Struct>:
+          host:
+            Description: 需要接入的 CDN 域名，可以配置auto
+            Required: True
+            Default: auto
+            Type:
+              - String
+          access:
+            Description: 访问控制
+            Required: false
+            Type:
+              - Struct:
+                  referer:
+                    Description: Referer防盗链
+                    Required: false
+                    Type:
+                      - Struct:
+                          refererType:
+                            Description: Referer类型
+                            Required: True
+                            Type:
+                              - Enum:
+                                  - blacklist
+                                  - whitelist
+                          allowEmpty:
+                            Description: 允许空 Referer字段访问CDN资源
+                            Required: false
+                            Type:
+                              - Boolean
+                          referers:
+                            Description: 规则，支持通配符，如a.*b.com可以匹配到a.aliyun.b.com或a.img.b.com等
+                            Required: True
+                            Type:
+                              - List<String>
+  cors:
+    Description: 设置跨域资源共享规则
+    Required: false
+    Type:
+      - Struct:
+          allowedOrigin:
+            Description: 允许访问的域名
+            Required: True
+            Type:
+              - List<String>
+          allowedMethod:
+            Description: 允许访问的域名
+            Required: True
+            Type:
+              - List<Enum>:
+                  - GET
+                  - PUT
+                  - DELETE
+                  - POST
+                  - HEAD
