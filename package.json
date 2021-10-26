@@ -1,5 +1,5 @@
 {
-  "name": "website-oss",
+  "name": "oss",
   "version": "0.0.1",
   "main": "./lib/index.js",
   "dependencies": {

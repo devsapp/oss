@@ -1,5 +1,5 @@
 declare namespace ServerlessDevsReport {
-  export interface Website {
+  export interface Oss {
     Region: string;
     Bucket: string;
     Domain?: string;
@@ -7,6 +7,6 @@ declare namespace ServerlessDevsReport {
   export interface ReportData {
     name: string;
     access: string;
-    content: Website;
+    content: Oss;
   }
 }

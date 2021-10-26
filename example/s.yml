@@ -1,6 +1,6 @@
 edition: 1.0.0
 services:
-  website:
+  oss-demo:
     component: ../lib
     access: default
     props:

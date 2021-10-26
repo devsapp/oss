@@ -50,17 +50,17 @@ export default async (ossConfig: IOssConfig) => {
   await put(ossClient, src.publishDir);
 
   // 配置静态托管
-  const websiteConfigObj = { index: src.index, error: src.error };
+  const ossConfigObj = { index: src.index, error: src.error };
   if (src.subDir && src.subDir.type) {
-    websiteConfigObj['supportSubDir'] = true;
-    websiteConfigObj['type'] =
+    ossConfigObj['supportSubDir'] = true;
+    ossConfigObj['type'] =
       {
         noSuchKey: 1,
         index: 2,
         redirect: 0,
       }[src.subDir.type] || 1;
   }
-  await ossClient.putBucketWebsite(bucket, websiteConfigObj);
+  await ossClient.putBucketWebsite(bucket, ossConfigObj);
   // 设置跨域资源共享规则
   if (cors) {
     await ossClient.putBucketCORS(bucket, cors);

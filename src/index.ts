@@ -6,7 +6,7 @@ import { DEFAULT_SRC, logger } from './common';
 import Base from './common/base';
 import { InputProps } from './common/entity';
 
-export default class WebsiteComponent extends Base {
+export default class OssComponent extends Base {
   /**
    * 部署
    * @param inputs
@@ -16,7 +16,7 @@ export default class WebsiteComponent extends Base {
     if (isEmpty(credentials)) {
       credentials = await getCredential(inputs, inputs.project.access);
     }
-    reportComponent('website', {
+    reportComponent('oss', {
       uid: credentials.AccountID,
       command: 'deploy',
     });

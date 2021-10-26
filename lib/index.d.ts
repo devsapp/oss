@@ -1,6 +1,6 @@
 import Base from './common/base';
 import { InputProps } from './common/entity';
-export default class WebsiteComponent extends Base {
+export default class OssComponent extends Base {
     /**
      * 部署
      * @param inputs
