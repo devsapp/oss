@@ -4,10 +4,13 @@ services:
     component: ../lib
     access: default
     props:
+      region: cn-hangzhou
       bucket: hfs-oss-bucket
-      src:
-        codeUri: './'
-        publishDir: './build'
+      codeUri: './build'
+      acl: 
+      static:
         index: index.html
         error: index.html
-      region: cn-hangzhou
+        childIndex:
+      cors:
+      refer:
