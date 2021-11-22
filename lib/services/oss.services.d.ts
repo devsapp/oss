@@ -10,10 +10,32 @@ interface ISrc {
 export interface IOssConfig {
     accessKeyId: string;
     accessKeySecret: string;
-    bucket: string;
     region: string;
-    src: ISrc;
-    cors: OssClient.CORSRule[];
+    bucket?: string;
+    cors?: OssClient.CORSRule[];
+    src?: ISrc;
+    acl?: string;
+}
+export interface IOssStatic {
+    index: string;
+    error?: string;
+    subDir?: ISubDir;
+}
+export declare type ACLType = 'public-read-write' | 'public-read' | 'private';
+export interface ISubDir {
+    type: string;
+}
+export interface IwebsiteConfig {
+    index: string;
+    error?: string;
+    supportSubDir?: boolean;
+    type?: number;
+    subDirType?: number;
+}
+export interface IResBucket {
+    remoteAddress: string;
+    remotePort?: string;
+    requestUrls?: string;
 }
 declare const _default: (ossConfig: IOssConfig) => Promise<void>;
 export default _default;

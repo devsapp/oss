@@ -6,14 +6,7 @@
     "@alicloud/openapi-client": "^0.3.3"
   },
   "devDependencies": {
-    "@serverless-devs/core": "^0.0.*",
-    "ali-oss": "^6.13.2",
-    "chillout": "^5.0.0",
-    "fs-extra": "^9.1.0",
-    "lodash": "*",
-    "path-to-regexp": "^6.2.0",
-    "rimraf": "^3.0.2",
-    "walk-sync": "^2.2.0",
+    "@serverless-devs/core": "^0.1.14",
     "@types/ali-oss": "^6.0.7",
     "@types/eslint": "^7.2.6",
     "@types/express": "^4.17.11",
@@ -22,12 +15,19 @@
     "@types/lodash": "^4.14.170",
     "@types/node": "14",
     "@vercel/ncc": "^0.29.2",
+    "ali-oss": "^6.13.2",
+    "chillout": "^5.0.0",
     "f2elint": "^0.4.4",
+    "fs-extra": "^9.1.0",
     "jest": "^26.4.0",
+    "lodash": "*",
+    "path-to-regexp": "^6.2.0",
+    "rimraf": "^3.0.2",
     "ts-jest": "^26.2.0",
     "ts-loader": "^8.0.14",
     "ts-node": "^9.1.1",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "walk-sync": "^2.2.0"
   },
   "scripts": {
     "start": "rimraf lib && npx tsc -w -p tsconfig.json",
@@ -39,12 +39,6 @@
     "fix": "f2elint fix",
     "typecheck": "npx tsc -p tsconfig.json --noEmit",
     "update": "rm -rf package-lock.json && rm -rf node_modules && npm install"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "f2elint exec commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "f2elint exec lint-staged"
-    }
   },
   "lint-staged": {
     "src/*.{js,jsx,ts}": "f2elint exec eslint"

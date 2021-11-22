@@ -1,16 +1,33 @@
 edition: 1.0.0
+name: oss
+vars: 
+  region: cn-beijing
 services:
-  oss-demo:
-    component: ../lib
-    access: default
+  oss:
+    component: ${path(..)} 
+    access: wll
     props:
-      region: cn-hangzhou
-      bucket: hfs-oss-bucket
+      region: ${vars.region}
+      bucket: wlltest-wlltest2
+      acl: public-read
       codeUri: './build'
-      acl: 
+      cors: [
+        { 
+          allowedOrigin: ['www.aliyun.com','www.aliyunSecond.com'],
+          allowedMethod: ['GET','PUT','DELETE','POST','HEAD']
+        },
+        { 
+          allowedOrigin: ['www.alibaba.com','www.alibabaSecond.com'],
+          allowedMethod: ['GET']
+        }
+      ]
+      referer: {
+          allowEmpty: true,
+          referers: ['www.tenxun.com','www.tenxun.com']
+      }
       static:
         index: index.html
         error: index.html
-        childIndex:
-      cors:
-      refer:
+        subDir: {
+          type: noSuchKey
+        }
