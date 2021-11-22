@@ -40,6 +40,12 @@
     "typecheck": "npx tsc -p tsconfig.json --noEmit",
     "update": "rm -rf package-lock.json && rm -rf node_modules && npm install"
   },
+  "husky": {
+    "hooks": {
+      "commit-msg": "f2elint exec commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "f2elint exec lint-staged"
+    }
+  },
   "lint-staged": {
     "src/*.{js,jsx,ts}": "f2elint exec eslint"
   },

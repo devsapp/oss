@@ -1,5 +1,5 @@
 Type: Component
-Name: oss
+Name: OSS
 Provider:
   - 阿里云
 Version: 0.0.5
