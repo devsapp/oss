@@ -54,11 +54,11 @@ Properties:
     Required: True
     Type:
       - String
-  # target:
-  #   Description: OSS 指定文件上传目录
-  #   Required: False
-  #   Type:
-  #     - String
+  prefix:
+    Description: 上传文件：指定文件目录
+    Required: False
+    Type:
+      - String
   cors:
     Description: 设置跨域资源共享规则
     Required: False
@@ -110,25 +110,30 @@ Properties:
       - Struct:
           index:
             Required: True
-            Description: 首页
+            Description: 默认首页
             Type:
               - String
           error:
             Required: True
-            Description: error页面
+            Description: 默认404页面
             Type:
               - String
           subDir:
             Required: false
-            Description: 访问子目录时，是否支持转至子目录下的默认主页。
+            Description: 访问子目录时，是否支持转至子目录下的默认主页。 存在type 开启子目录，无type 关闭子目录
             Type:
               Struct:
-                Required: True
-                Description: 设置默认主页后，访问以非正斜线（/）结尾的Object，且该Object不存在时的行为。
-                Type:
-                  - Enum:
-                      - redirect
-                      - noSuchKey
-                      - index
+                type: 
+                  Required: True
+                  Description: 开启子目录首页后，访问以非正斜线（/）结尾的Object，且该Object不存在时的行为。
+                                Redirect （默认值）：会检查 object + / + 首页是否存在，如果存在则返回 302，Location 头为 / + object + / 的 url 编码，如果不存在则返回 404，并继续检查默认 404 页。
+                                NoSuchKey：直接返回 404，报 NoSuchKey，并继续检查默认 404 页。
+                                Index：会检查 object + / + 首页是否存在，如果存在则返回这个主页的内容，如果不存在则返回 404，继续检查默认 404 页
+                  Type:
+                    - Enum:
+                        - redirect
+                        - noSuchKey
+                        - index
+
 
                  

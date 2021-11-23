@@ -31,11 +31,11 @@ export default class OssComponent extends Base {
         const res = await inquirer.prompt([
           {
             type: 'confirm',
-            name: 'isCreated',
+            name: 'needToCreate',
             message: `The bucket ${bucket} is inexistent, create the ${bucket} now?`,
           },
         ]);
-        if (res.isCreated) {
+        if (res.needToCreate) {
           // create bucket
           const createLoading = spinner(`The bucket of ${bucket} is creating`);
           await client.putBucket(bucket);
@@ -55,11 +55,13 @@ export default class OssComponent extends Base {
    * upload file
    * @param inputs
    */
-  async upload(ossClient: OssClient, staticPath: string) {
+  async upload(ossClient: OssClient, staticPath: string, ossPrefix: string) {
     const paths = walkSync(staticPath);
     for (const p of paths) {
       const fillPath = path.resolve(staticPath, p);
       const stat = fs.statSync(fillPath);
+      // console.log('fillPath', fillPath, 'p-----', p, 'staticPath', staticPath);
+      console.log('stat', stat);
       if (stat.isFile()) {
         const spin = spinner(`上传 ${p}`);
         try {
@@ -94,9 +96,10 @@ export default class OssComponent extends Base {
     const ossRegion = `oss-${get(inputs, 'props.region')}`;
     const ossBucket = get(inputs, 'props.bucket');
     const ossAcl = get(inputs, 'props.acl') || 'private';
-    const ossCors = get(inputs, 'props.cors') || [];
+    const ossPrefix = get(inputs, 'props.prefix');
+    const ossCors = get(inputs, 'props.cors');
     const ossReferer = get(inputs, 'props.referer');
-    const { allowEmpty, referers: ossReferers = [] } = ossReferer;
+    const { allowEmpty, referers: ossReferers } = ossReferer;
     const ossSrc = get(inputs, 'props.codeUri');
     const ossStatic: IOssStatic = get(inputs, 'props.static', DEFAULT_SRC);
     const { index, error, subDir } = ossStatic;
@@ -122,13 +125,13 @@ export default class OssComponent extends Base {
       // update ossAcl
       ossAcl && (await ossClient.putBucketACL(ossBucket, ossAcl));
       // update ossCors
-      ossCors.length > 0 && (await ossClient.putBucketCORS(ossBucket, ossCors));
+      ossCors && (await ossClient.putBucketCORS(ossBucket, ossCors));
       // update ossReferer
-      if (allowEmpty.toString() && ossReferers.length > 0) {
+      if (allowEmpty.toString() && ossReferers) {
         await ossClient.putBucketReferer(ossBucket, allowEmpty, ossReferers);
       }
       // upload file
-      await this.upload(ossClient, ossSrc);
+      await this.upload(ossClient, ossSrc, ossPrefix);
       // update static
       const websiteConfig: IwebsiteConfig = { index, error };
       if (subDir && subDir.type) {
@@ -139,18 +142,16 @@ export default class OssComponent extends Base {
           index: 2,
           redirect: 0,
         };
-        const subDirType = typeMap[subDir.type];
+        const subDirType = typeMap[subDir.type] || 1;
         websiteConfig.type = subDirType;
       }
       index && error && (await ossClient.putBucketWebsite(ossBucket, websiteConfig));
       deployLoading.succeed('OSS static source deployed success');
-      const { res: bucketRes } = await ossClient.getBucketWebsite(ossBucket);
-      const { remoteAddress, remotePort }: any = bucketRes;
+      await ossClient.getBucketWebsite(ossBucket);
       return {
         Bucket: ossBucket,
         Region: get(inputs, 'props.region'),
-        RemoteAddress: remoteAddress,
-        RemotePort: remotePort,
+        requestUrls: `http://${ossBucket}.${ossRegion}.aliyuncs.com/${index}`,
       };
     } catch (e) {
       deployLoading.fail();

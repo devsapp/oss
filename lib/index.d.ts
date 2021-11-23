@@ -17,7 +17,7 @@ export default class OssComponent extends Base {
      * upload file
      * @param inputs
      */
-    upload(ossClient: OssClient, staticPath: string): Promise<void>;
+    upload(ossClient: OssClient, staticPath: string, ossPrefix: string): Promise<void>;
     /**
      * 部署
      * @param inputs
@@ -25,12 +25,10 @@ export default class OssComponent extends Base {
     deploy(inputs: InputProps): Promise<{
         Bucket: any;
         Region: any;
-        RemoteAddress: any;
-        RemotePort: any;
+        requestUrls: string;
     } | {
         Bucket?: undefined;
         Region?: undefined;
-        RemoteAddress?: undefined;
-        RemotePort?: undefined;
+        requestUrls?: undefined;
     }>;
 }

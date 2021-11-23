@@ -11,6 +11,7 @@ services:
       bucket: wlltest-wlltest2
       acl: public-read
       codeUri: './build'
+      prefix: wlltestDir
       cors: [
         { 
           allowedOrigin: ['www.aliyun.com','www.aliyunSecond.com'],
@@ -23,11 +24,11 @@ services:
       ]
       referer: {
           allowEmpty: true,
-          referers: ['www.tenxun.com','www.tenxun.com']
+          referers: []
       }
       static:
         index: index.html
-        error: index.html
+        error: error.html
         subDir: {
           type: noSuchKey
         }

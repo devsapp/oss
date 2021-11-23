@@ -4,7 +4,6 @@ export declare const PUT_BUCKET_CORS: {
     allowedMethod: string[];
 }[];
 export declare const DEFAULT_SRC: {
-    codeUri: string;
     index: string;
     error: string;
 };
