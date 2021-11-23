@@ -1,5 +1,5 @@
 import OssClient from 'ali-oss';
-import { ACLType } from './services/oss.services';
+import { ACLType, IOssRes } from './services/oss.services';
 import Base from './common/base';
 import { InputProps } from './common/entity';
 export interface IResBucket {
@@ -17,18 +17,12 @@ export default class OssComponent extends Base {
      * upload file
      * @param inputs
      */
-    upload(ossClient: OssClient, staticPath: string, ossPrefix: string): Promise<void>;
+    upload(ossClient: OssClient, staticPath: string, ossPrefix?: string): Promise<void>;
     /**
      * 部署
      * @param inputs
      */
-    deploy(inputs: InputProps): Promise<{
-        Bucket: any;
-        Region: any;
-        requestUrls: string;
-    } | {
-        Bucket?: undefined;
-        Region?: undefined;
-        requestUrls?: undefined;
+    deploy(inputs: InputProps): Promise<IOssRes | {
+        errMesg: string;
     }>;
 }

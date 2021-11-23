@@ -8,6 +8,7 @@ https://eslint.org/docs/rules/no-await-in-loop
 
 - 上传文件、指定目录
   没有 option 参数指定目录，是否帮用户本地创建指定目录文件夹；
+  SDK 是不是就是在本地创建文件夹
   https://help.aliyun.com/document_detail/111266.html；
 - static 子目录
   绑定自定义域名才可以验证，子目录访问的 404 规则

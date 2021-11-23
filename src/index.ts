@@ -4,8 +4,8 @@ import OssClient from 'ali-oss';
 import path from 'path';
 import fs from 'fs-extra';
 import walkSync from 'walk-sync';
-import { IOssConfig, IOssStatic, IwebsiteConfig, ACLType } from './services/oss.services';
-import { DEFAULT_SRC, logger } from './common';
+import { IOssConfig, IOssStatic, IwebsiteConfig, ACLType, IOssRes } from './services/oss.services';
+import { logger } from './common';
 import Base from './common/base';
 import { InputProps } from './common/entity';
 
@@ -55,23 +55,28 @@ export default class OssComponent extends Base {
    * upload file
    * @param inputs
    */
-  async upload(ossClient: OssClient, staticPath: string, ossPrefix: string) {
+  async upload(ossClient: OssClient, staticPath: string, ossPrefix?: string) {
     const paths = walkSync(staticPath);
     for (const p of paths) {
       const fillPath = path.resolve(staticPath, p);
-      const stat = fs.statSync(fillPath);
-      // console.log('fillPath', fillPath, 'p-----', p, 'staticPath', staticPath);
-      console.log('stat', stat);
-      if (stat.isFile()) {
-        const spin = spinner(`上传 ${p}`);
-        try {
-          // eslint-disable-next-line no-await-in-loop
-          await ossClient.put(p, fillPath);
-          spin.stop();
-        } catch (error) {
-          spin.fail();
-          throw new Error(error.message);
-        }
+      /**
+       * upload empty direction ？
+       * const stat = fs.statSync(fillPath);
+       * if (stat.isFile()) {}
+       */
+
+      /**
+       * local create prefix ？
+       * `${staticPath}/${ossPrefix}`
+       */
+      const spin = spinner(`${p} is uploading `);
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        await ossClient.put(p, fillPath);
+        spin.stop();
+      } catch (error) {
+        spin.fail(`${p} has uploaded failed`);
+        throw new Error(error.message);
       }
     }
   }
@@ -101,7 +106,7 @@ export default class OssComponent extends Base {
     const ossReferer = get(inputs, 'props.referer');
     const { allowEmpty, referers: ossReferers } = ossReferer;
     const ossSrc = get(inputs, 'props.codeUri');
-    const ossStatic: IOssStatic = get(inputs, 'props.static', DEFAULT_SRC);
+    const ossStatic: IOssStatic = get(inputs, 'props.static', {});
     const { index, error, subDir } = ossStatic;
     // cofig
     const ossConfig: IOssConfig = {
@@ -148,15 +153,18 @@ export default class OssComponent extends Base {
       index && error && (await ossClient.putBucketWebsite(ossBucket, websiteConfig));
       deployLoading.succeed('OSS static source deployed success');
       await ossClient.getBucketWebsite(ossBucket);
-      return {
+      const result: IOssRes = {
         Bucket: ossBucket,
         Region: get(inputs, 'props.region'),
-        requestUrls: `http://${ossBucket}.${ossRegion}.aliyuncs.com/${index}`,
+        ossAddress: `https://oss.console.aliyun.com/bucket/${ossRegion}/${ossBucket}/object`,
       };
+      index && (result.indexHtml = `http://${ossBucket}.${ossRegion}.aliyuncs.com/${index}`);
+      return result;
     } catch (e) {
-      deployLoading.fail();
-      logger.log('Oss deploy is Error', 'red');
-      return {};
+      deployLoading.fail('Oss deploy is Error');
+      return {
+        errMesg: `Oss deploy Error:${e}`,
+      };
     }
   }
 }

@@ -27,8 +27,8 @@ services:
           referers: []
       }
       static:
-        index: index.html
-        error: error.html
-        subDir: {
-          type: noSuchKey
-        }
+        # index: index.html
+        # error: error.html
+        # subDir: {
+        #   type: noSuchKey
+        # }

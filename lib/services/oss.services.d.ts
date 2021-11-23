@@ -21,6 +21,12 @@ export interface IOssStatic {
     error?: string;
     subDir?: ISubDir;
 }
+export interface IOssRes {
+    Bucket: string;
+    Region: string;
+    ossAddress: string;
+    indexHtml?: string;
+}
 export declare type ACLType = 'public-read-write' | 'public-read' | 'private';
 export interface ISubDir {
     type: string;
