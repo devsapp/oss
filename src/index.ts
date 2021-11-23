@@ -55,7 +55,7 @@ export default class OssComponent extends Base {
    * upload file
    * @param inputs
    */
-  async upload(ossClient: OssClient, staticPath: string, ossPrefix?: string) {
+  async upload(ossClient: OssClient, staticPath: string) {
     const paths = walkSync(staticPath);
     for (const p of paths) {
       const fillPath = path.resolve(staticPath, p);
@@ -69,14 +69,17 @@ export default class OssComponent extends Base {
        * local create prefix ？
        * `${staticPath}/${ossPrefix}`
        */
-      const spin = spinner(`${p} is uploading `);
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        await ossClient.put(p, fillPath);
-        spin.stop();
-      } catch (error) {
-        spin.fail(`${p} has uploaded failed`);
-        throw new Error(error.message);
+      const stat = fs.statSync(fillPath);
+      if (stat.isFile()) {
+        const spin = spinner(`${p} is uploading `);
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          await ossClient.put(p, fillPath);
+          spin.stop();
+        } catch (error) {
+          spin.fail(`${p} has uploaded failed`);
+          throw new Error(error.message);
+        }
       }
     }
   }
@@ -101,7 +104,6 @@ export default class OssComponent extends Base {
     const ossRegion = `oss-${get(inputs, 'props.region')}`;
     const ossBucket = get(inputs, 'props.bucket');
     const ossAcl = get(inputs, 'props.acl') || 'private';
-    const ossPrefix = get(inputs, 'props.prefix');
     const ossCors = get(inputs, 'props.cors');
     const ossReferer = get(inputs, 'props.referer');
     const { allowEmpty, referers: ossReferers } = ossReferer;
@@ -136,7 +138,7 @@ export default class OssComponent extends Base {
         await ossClient.putBucketReferer(ossBucket, allowEmpty, ossReferers);
       }
       // upload file
-      await this.upload(ossClient, ossSrc, ossPrefix);
+      await this.upload(ossClient, ossSrc);
       // update static
       const websiteConfig: IwebsiteConfig = { index, error };
       if (subDir && subDir.type) {

@@ -54,11 +54,6 @@ Properties:
     Required: True
     Type:
       - String
-  prefix:
-    Description: 上传文件：指定文件目录
-    Required: False
-    Type:
-      - String
   cors:
     Description: 设置跨域资源共享规则
     Required: False
