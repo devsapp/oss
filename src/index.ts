@@ -149,7 +149,7 @@ export default class OssComponent extends Base {
           index: 2,
           redirect: 0,
         };
-        const subDirType = typeMap[subDir.type] || 1;
+        const subDirType = get(typeMap, subDir.type, 1);
         websiteConfig.type = subDirType;
       }
       await ossClient.putBucketWebsite(ossBucket, websiteConfig);

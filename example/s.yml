@@ -30,5 +30,5 @@ services:
         index: index.html
         error: error.html
         subDir: {
-          type: noSuchKey
+          type: redirect
         }

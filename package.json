@@ -1,6 +1,6 @@
 {
   "name": "oss",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "./lib/index.js",
   "dependencies": {
     "@alicloud/openapi-client": "^0.3.3"
