@@ -64,11 +64,11 @@ $ s deploy
 ```yml
 # s.yml
 edition: 1.0.0 # 命令行YAML规范版本，遵循语义化版本（Semantic Versioning）规范
-name: oss-demo # (必填) 项目名称
+name: oss # (必填) 项目名称
 access: 'hfs-access'
 
 services:
-  oss-demo:
+  oss:
     component: oss # (必填) 引用 component 的名称
     access: default
     props:
