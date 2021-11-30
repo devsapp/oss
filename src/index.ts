@@ -55,7 +55,7 @@ export default class OssComponent extends Base {
    * upload file
    * @param inputs
    */
-  async upload(ossClient: OssClient, staticPath: string) {
+  async upload(ossClient: OssClient, staticPath: string, ossObject: string) {
     const paths = walkSync(staticPath);
     for (const p of paths) {
       const fillPath = path.resolve(staticPath, p);
@@ -73,8 +73,9 @@ export default class OssComponent extends Base {
       if (stat.isFile()) {
         const spin = spinner(`${p} is uploading `);
         try {
+          const assignedOssdir = ossObject ? `${ossObject}/${p}` : p;
           // eslint-disable-next-line no-await-in-loop
-          await ossClient.put(p, fillPath);
+          await ossClient.put(assignedOssdir, fillPath);
           spin.stop();
         } catch (error) {
           spin.fail(`${p} has uploaded failed`);
@@ -103,13 +104,14 @@ export default class OssComponent extends Base {
     const { AccessKeyID, AccessKeySecret } = credentials;
     const ossRegion = `oss-${get(inputs, 'props.region')}`;
     const ossBucket = get(inputs, 'props.bucket');
-    const ossAcl = get(inputs, 'props.acl') || 'private';
-    const ossCors = get(inputs, 'props.cors');
-    const ossReferer = get(inputs, 'props.referer');
-    const { allowEmpty, referers: ossReferers } = ossReferer;
+    const ossAcl = get(inputs, 'props.acl', 'private');
+    const ossCors = get(inputs, 'props.cors', []);
+    const ossObject = get(inputs, 'props.ossObject');
+    const ossReferer = get(inputs, 'props.referer', {});
+    const { allowEmpty = true, referers: ossReferers = [] } = ossReferer;
     const ossSrc = get(inputs, 'props.codeUri');
     const ossStatic: IOssStatic = get(inputs, 'props.static', {});
-    const { index, error, subDir } = ossStatic;
+    const { index = '', error = '', subDir = '' } = ossStatic;
     // cofig
     const ossConfig: IOssConfig = {
       accessKeyId: AccessKeyID,
@@ -130,15 +132,13 @@ export default class OssComponent extends Base {
     // add attr to bucket and upload object
     try {
       // update ossAcl
-      ossAcl && (await ossClient.putBucketACL(ossBucket, ossAcl));
-      // update ossCors
-      ossCors && (await ossClient.putBucketCORS(ossBucket, ossCors));
+      await ossClient.putBucketACL(ossBucket, ossAcl);
+      // update ossCors allowedOrigin allowedMethod 必须填写
+      !isEmpty(ossCors) && (await ossClient.putBucketCORS(ossBucket, ossCors));
       // update ossReferer
-      if (allowEmpty.toString() && ossReferers) {
-        await ossClient.putBucketReferer(ossBucket, allowEmpty, ossReferers);
-      }
+      await ossClient.putBucketReferer(ossBucket, allowEmpty, ossReferers);
       // upload file
-      await this.upload(ossClient, ossSrc);
+      await this.upload(ossClient, ossSrc, ossObject);
       // update static
       const websiteConfig: IwebsiteConfig = { index, error };
       if (subDir && subDir.type) {
@@ -152,9 +152,9 @@ export default class OssComponent extends Base {
         const subDirType = typeMap[subDir.type] || 1;
         websiteConfig.type = subDirType;
       }
-      index && error && (await ossClient.putBucketWebsite(ossBucket, websiteConfig));
+      await ossClient.putBucketWebsite(ossBucket, websiteConfig);
       deployLoading.succeed('OSS static source deployed success');
-      await ossClient.getBucketWebsite(ossBucket);
+      // await ossClient.getBucketWebsite(ossBucket);
       const result: IOssRes = {
         Bucket: ossBucket,
         Region: get(inputs, 'props.region'),

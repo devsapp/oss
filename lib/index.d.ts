@@ -17,7 +17,7 @@ export default class OssComponent extends Base {
      * upload file
      * @param inputs
      */
-    upload(ossClient: OssClient, staticPath: string): Promise<void>;
+    upload(ossClient: OssClient, staticPath: string, ossObject: string): Promise<void>;
     /**
      * 部署
      * @param inputs

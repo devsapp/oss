@@ -11,9 +11,10 @@ services:
       bucket: wlltest-wlltest2
       acl: public-read
       codeUri: './build'
+      ossObject: wllAssignObject
       cors: [
         { 
-          allowedOrigin: ['www.aliyun.com','www.aliyunSecond.com'],
+          allowedOrigin: ['www.aliyun.com'],
           allowedMethod: ['GET','PUT','DELETE','POST','HEAD']
         },
         { 
@@ -26,8 +27,8 @@ services:
           referers: []
       }
       static:
-        # index: index.html
-        # error: error.html
-        # subDir: {
-        #   type: noSuchKey
-        # }
+        index: index.html
+        error: error.html
+        subDir: {
+          type: noSuchKey
+        }
