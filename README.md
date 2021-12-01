@@ -65,7 +65,8 @@ $ s deploy
 # s.yml
 edition: 1.0.0 # 命令行YAML规范版本，遵循语义化版本（Semantic Versioning）规范
 name: oss # (必填) 项目名称
-access: 'hfs-access'
+vars:
+  region: cn-beijing
 
 services:
   oss:
@@ -75,17 +76,17 @@ services:
       region: ${vars.region}
       bucket: wlltest-wlltest2
       acl: public-read
-      codeUri: './build'
+      codeUri: ./build
       ossObject: wllAssignObject
       cors:
         [
           {
-            allowedOrigin: ['www.aliyun.com', 'www.aliyunSecond.com'],
+            allowedOrigin: ['https://oss.console.aliyun.com'],
             allowedMethod: ['GET', 'PUT', 'DELETE', 'POST', 'HEAD'],
           },
-          { allowedOrigin: ['www.alibaba.com', 'www.alibabaSecond.com'], allowedMethod: ['GET'] },
+          { allowedOrigin: ['https://www.aliyun.com'], allowedMethod: ['GET'] },
         ]
-      referer: { allowEmpty: true, referers: [] }
+      referer: { allowEmpty: true, referers: ['https://edasnext.console.aliyun.com'] }
       static:
 ```
 
