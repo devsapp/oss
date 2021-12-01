@@ -9,7 +9,7 @@ Tags:
   - OSS组件
 Category: 基础云服务
 Commands:
-  deploy: 部署OSS静态资源项目
+  deploy: 部署OSS静态资源
 Properties:
   region:
     Description: 地域

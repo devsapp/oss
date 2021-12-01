@@ -2,9 +2,7 @@
   "name": "oss",
   "version": "0.0.7",
   "main": "./lib/index.js",
-  "dependencies": {
-    "@alicloud/openapi-client": "^0.3.3"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@serverless-devs/core": "^0.1.14",
     "@types/ali-oss": "^6.0.7",
@@ -32,7 +30,7 @@
   "scripts": {
     "start": "rimraf lib && npx tsc -w -p tsconfig.json",
     "prebuild": "rm -rf lib",
-    "build": "ncc build src/index.ts -m -e @serverless-devs/core -e @alicloud/openapi-client -o lib",
+    "build": "ncc build src/index.ts -m -e @serverless-devs/core -o lib",
     "test": "jest",
     "test:cov": "jest --coverage",
     "lint": "f2elint scan",

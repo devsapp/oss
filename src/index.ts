@@ -53,7 +53,7 @@ export default class OssComponent extends Base {
   }
   /**
    * upload file
-   * @param inputs
+   * @param ossClient staticPath  ossObject
    */
   async upload(ossClient: OssClient, staticPath: string, ossObject: string) {
     const paths = walkSync(staticPath);
@@ -85,7 +85,7 @@ export default class OssComponent extends Base {
     }
   }
   /**
-   * 部署
+   * deploy
    * @param inputs
    */
   async deploy(inputs: InputProps) {
