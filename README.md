@@ -88,6 +88,7 @@ services:
         ]
       referer: { allowEmpty: true, referers: ['https://edasnext.console.aliyun.com'] }
       static:
+      endpoint:
 ```
 
 当你根据该配置文件更新配置字段后，再次运行 `s deploy`

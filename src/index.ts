@@ -1,4 +1,10 @@
-import { spinner, reportComponent, getCredential, inquirer } from '@serverless-devs/core';
+import {
+  spinner,
+  reportComponent,
+  getCredential,
+  inquirer,
+  loadComponent,
+} from '@serverless-devs/core';
 import { get, isEmpty } from 'lodash';
 import OssClient from 'ali-oss';
 import path from 'path';
@@ -105,13 +111,6 @@ export default class OssComponent extends Base {
     const ossRegion = `oss-${get(inputs, 'props.region')}`;
     const ossBucket = get(inputs, 'props.bucket');
     const ossAcl = get(inputs, 'props.acl', 'private');
-    const ossCors = get(inputs, 'props.cors', []);
-    const ossObject = get(inputs, 'props.ossObject');
-    const ossReferer = get(inputs, 'props.referer', {});
-    const { allowEmpty = true, referers: ossReferers = [] } = ossReferer;
-    const ossSrc = get(inputs, 'props.codeUri');
-    const ossStatic: IOssStatic = get(inputs, 'props.static', {});
-    const { index = '', error = '', subDir = '' } = ossStatic;
     // cofig
     const ossConfig: IOssConfig = {
       accessKeyId: AccessKeyID,
@@ -134,12 +133,19 @@ export default class OssComponent extends Base {
       // update ossAcl
       await ossClient.putBucketACL(ossBucket, ossAcl);
       // update ossCors allowedOrigin allowedMethod 必须填写
+      const ossCors = get(inputs, 'props.cors', []);
       !isEmpty(ossCors) && (await ossClient.putBucketCORS(ossBucket, ossCors));
       // update ossReferer
+      const ossReferer = get(inputs, 'props.referer', {});
+      const { allowEmpty = true, referers: ossReferers = [] } = ossReferer;
       await ossClient.putBucketReferer(ossBucket, allowEmpty, ossReferers);
       // upload file
+      const ossSrc = get(inputs, 'props.codeUri');
+      const ossObject = get(inputs, 'props.ossObject');
       await this.upload(ossClient, ossSrc, ossObject);
       // update static
+      const ossStatic: IOssStatic = get(inputs, 'props.static', {});
+      const { index = '', error = '', subDir = '' } = ossStatic;
       const websiteConfig: IwebsiteConfig = { index, error };
       if (subDir && subDir.type) {
         // supportSubDir ?
@@ -154,7 +160,24 @@ export default class OssComponent extends Base {
       }
       await ossClient.putBucketWebsite(ossBucket, websiteConfig);
       deployLoading.succeed('OSS static source deployed success');
-      // await ossClient.getBucketWebsite(ossBucket);
+      // Map the domain name
+      // const domainConponent = await loadComponent('devsapp/domain');
+      const ossEndpoint = get(inputs, 'props.endpoint');
+      console.log('ossEndpoint', ossEndpoint);
+      if (ossEndpoint) {
+        const mapDomainSpinner = spinner('Starting OSS Map Custome Domain Name');
+        ossClient = new OssClient({
+          accessKeyId: AccessKeyID,
+          accessKeySecret: AccessKeySecret,
+          cname: true,
+          endpoint: ossEndpoint,
+        });
+        await ossClient.useBucket(ossBucket);
+        mapDomainSpinner.succeed('OSS Map Custome Domain Name Successful');
+      }
+      // get bucket info
+      const bucketInfo = await ossClient.getBucketInfo(ossBucket);
+      console.log('bucketInfo', bucketInfo);
       const result: IOssRes = {
         Bucket: ossBucket,
         Region: get(inputs, 'props.region'),

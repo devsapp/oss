@@ -134,6 +134,9 @@ Properties:
                         - redirect
                         - noSuchKey
                         - index
-
-
+  # endpoint:
+  #   Description: 自定义域名
+  #   Required: False
+  #   Type:
+  #     - String
                  

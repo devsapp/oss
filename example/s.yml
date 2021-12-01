@@ -32,3 +32,5 @@ services:
         subDir: {
           type: redirect
         }
+      endpoint: oss.three5.xyz
+
