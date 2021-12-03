@@ -1,37 +1,13 @@
 edition: 1.0.0
-name: oss
-vars: 
-  region: cn-beijing
 services:
-  oss:
-    component: ${path(..)} 
-    access: wll
+  oss-demo:
+    component: ../lib
+    access: default
     props:
-      region: ${vars.region}
-      bucket: wlltest-wlltest2
-      acl: public-read
-      codeUri: ./build
-      ossObject: wllAssignObject
-      cors: [
-        { 
-          allowedOrigin: ['https://oss.console.aliyun.com'],
-          allowedMethod: ['GET','PUT','DELETE','POST','HEAD']
-        },
-        { 
-          allowedOrigin: ['https://www.aliyun.com'],
-          allowedMethod: ['GET']
-        }
-      ]
-      referer: {
-          allowEmpty: true,
-          referers: ['https://edasnext.console.aliyun.com']
-      }
-      static:
+      bucket: hfs-oss-bucket
+      src:
+        codeUri: './'
+        publishDir: './build'
         index: index.html
-        error: error.html
-        subDir: {
-          type: redirect
-        }
-      endpoint: https://oss.three5.xyz
-        # oss.three5.xyz
-
+        error: index.html
+      region: cn-hangzhou

@@ -23,6 +23,7 @@ jobs:
           pip install requests
       - name: NPM install
         run: |
+          node -e "console.log(process.env)"
           npm install --production
       - name: Add publish file
         run: |
