@@ -19,6 +19,8 @@ export interface IOssConfig {
   accessKeySecret: string;
   region: string;
   bucket?: string;
+  endpoint?: string;
+  cname?: boolean
   cors?: OssClient.CORSRule[];
   src?: ISrc;
   acl?: string;
