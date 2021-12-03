@@ -2,9 +2,10 @@
   "name": "oss",
   "version": "0.0.8",
   "main": "./lib/index.js",
+  "autoInstall": false,
   "dependencies": {},
   "devDependencies": {
-    "@serverless-devs/core": "^0.1.14",
+    "@serverless-devs/core": "latest",
     "@types/ali-oss": "^6.0.7",
     "@types/eslint": "^7.2.6",
     "@types/express": "^4.17.11",

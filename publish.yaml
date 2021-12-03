@@ -1,8 +1,8 @@
 Type: Component
-Name: OSS
+Name: oss
 Provider:
   - 阿里云
-Version: 0.0.8
+Version: 0.0.7
 Description: 阿里云OSS组件
 HomePage: https://github.com/devsapp/oss
 Tags:
@@ -42,19 +42,19 @@ Properties:
     Type:
       - String
   acl:
-    Description: OSS bucket 权限 、 文件上传继承OSS bucket权限  
+    Description: OSS bucket 权限 、 文件上传继承OSS bucket权限
     Required: False
     Type:
       - Enum:
           - private
           - public-read
           - public-read-write
-  codeUri: 
+  codeUri:
     Description: 本地需要上传的文件
     Required: True
     Type:
       - String
-  ossObject: 
+  ossObject:
     Description: 指定目录
     Required: False
     Type:
@@ -123,12 +123,13 @@ Properties:
             Description: 访问子目录时，是否支持转至子目录下的默认主页。 存在type 开启子目录，无type 关闭子目录
             Type:
               Struct:
-                type: 
+                type:
                   Required: True
-                  Description: 开启子目录首页后，访问以非正斜线（/）结尾的Object，且该Object不存在时的行为。
-                                Redirect （默认值）：会检查 object + / + 首页是否存在，如果存在则返回 302，Location 头为 / + object + / 的 url 编码，如果不存在则返回 404，并继续检查默认 404 页。
-                                NoSuchKey：直接返回 404，报 NoSuchKey，并继续检查默认 404 页。
-                                Index：会检查 object + / + 首页是否存在，如果存在则返回这个主页的内容，如果不存在则返回 404，继续检查默认 404 页
+                  Description:
+                    开启子目录首页后，访问以非正斜线（/）结尾的Object，且该Object不存在时的行为。
+                    Redirect （默认值）：会检查 object + / + 首页是否存在，如果存在则返回 302，Location 头为 / + object + / 的 url 编码，如果不存在则返回 404，并继续检查默认 404 页。
+                    NoSuchKey：直接返回 404，报 NoSuchKey，并继续检查默认 404 页。
+                    Index：会检查 object + / + 首页是否存在，如果存在则返回这个主页的内容，如果不存在则返回 404，继续检查默认 404 页
                   Type:
                     - Enum:
                         - redirect
@@ -139,4 +140,3 @@ Properties:
   #   Required: False
   #   Type:
   #     - String
-                 
