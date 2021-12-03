@@ -1,10 +1,11 @@
 {
   "name": "oss",
-  "version": "0.0.10",
+  "version": "1.0.1",
   "main": "./lib/index.js",
-  "dependencies": {},
+  "dependencies": {
+    "@serverless-devs/core": "^0.1.14"
+  },
   "devDependencies": {
-    "@serverless-devs/core": "^0.1.14",
     "@types/ali-oss": "^6.0.7",
     "@types/eslint": "^7.2.6",
     "@types/express": "^4.17.11",
