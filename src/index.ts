@@ -1,10 +1,4 @@
-import {
-  spinner,
-  reportComponent,
-  getCredential,
-  inquirer,
-  loadComponent,
-} from '@serverless-devs/core';
+import { spinner, reportComponent, getCredential, inquirer } from '@serverless-devs/core';
 import { get, isEmpty } from 'lodash';
 import OssClient from 'ali-oss';
 import path from 'path';
@@ -164,20 +158,15 @@ export default class OssComponent extends Base {
       // const domainConponent = await loadComponent('devsapp/domain');
       const ossEndpoint = get(inputs, 'props.endpoint');
       console.log('ossEndpoint', ossEndpoint);
-      if (ossEndpoint) {
-        const mapDomainSpinner = spinner('Starting OSS Map Custome Domain Name');
-        ossClient = new OssClient({
-          accessKeyId: AccessKeyID,
-          accessKeySecret: AccessKeySecret,
-          cname: true,
-          endpoint: ossEndpoint,
-        });
-        await ossClient.useBucket(ossBucket);
-        mapDomainSpinner.succeed('OSS Map Custome Domain Name Successful');
-      }
-      // get bucket info
-      const bucketInfo = await ossClient.getBucketInfo(ossBucket);
-      console.log('bucketInfo', bucketInfo);
+      // 校验域名是否可以自动添加CNAME记录
+      // DNS DOMAIN client.useBucket('examplebucket')
+      ossClient = new OssClient({
+        accessKeyId: AccessKeyID,
+        accessKeySecret: AccessKeySecret,
+        endpoint: ossEndpoint,
+        cname: true,
+      });
+      await ossClient.useBucket(ossBucket);
       const result: IOssRes = {
         Bucket: ossBucket,
         Region: get(inputs, 'props.region'),
