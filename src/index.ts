@@ -155,18 +155,6 @@ export default class OssComponent extends Base {
       await ossClient.putBucketWebsite(ossBucket, websiteConfig);
       deployLoading.succeed('OSS static source deployed success');
       // Map the domain name
-      // const domainConponent = await loadComponent('devsapp/domain');
-      const ossEndpoint = get(inputs, 'props.endpoint');
-      console.log('ossEndpoint', ossEndpoint);
-      // 校验域名是否可以自动添加CNAME记录
-      // DNS DOMAIN client.useBucket('examplebucket')
-      ossClient = new OssClient({
-        accessKeyId: AccessKeyID,
-        accessKeySecret: AccessKeySecret,
-        endpoint: ossEndpoint,
-        cname: true,
-      });
-      await ossClient.useBucket(ossBucket);
       const result: IOssRes = {
         Bucket: ossBucket,
         Region: get(inputs, 'props.region'),
@@ -175,7 +163,6 @@ export default class OssComponent extends Base {
       index && (result.indexHtml = `http://${ossBucket}.${ossRegion}.aliyuncs.com/${index}`);
       return result;
     } catch (e) {
-      deployLoading.fail('Oss deploy is Error');
       return {
         errMesg: `Oss deploy Error:${e}`,
       };
