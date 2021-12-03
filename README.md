@@ -1,6 +1,6 @@
 ![oss](https://img.alicdn.com/imgextra/i4/O1CN01ws7Hju1PU8fFY52Cq_!!6000000001843-0-tps-2608-1000.jpg)
-**阿里云静态资源 OSS 组件** ⎯⎯⎯ 通过使用 [Serverless-Devs](https://github.com/devsapp)，基于云上 Serverless 的对象存储服务，实现“0”配置，便捷开发，极速上传您的静态资源托管到阿里云对象存储OSS（Object Storage Service）。
-静态资源OSS组件支持丰富的配置扩展，提供了目前最易用、低成本并且弹性伸缩的静态站点开发和托管能力。
+**阿里云静态资源 OSS 组件** ⎯⎯⎯ 通过使用 [Serverless-Devs](https://github.com/devsapp)，基于云上 Serverless 的对象存储服务，实现“0”配置，便捷开发，极速上传您的静态资源托管到阿里云对象存储 OSS（Object Storage Service）。
+静态资源 OSS 组件支持丰富的配置扩展，提供了目前最易用、低成本并且弹性伸缩的静态站点开发和托管能力。
 <br/>
 
 特性介绍：
@@ -17,7 +17,7 @@
 2. [**创建资源**](#2-创建)
 3. [**部署**](#3-部署)
 4. [**配置**](#4-配置)
-5. [**账号配置**](<#账号配置>)
+5. [**账号配置**](#账号配置)
 
 &nbsp;
 
@@ -30,7 +30,9 @@ $ npm install @serverless-devs/s -g
 ```
 
 ### 2. 创建资源
+
 新建文件，如下：
+
 ```
 ├── src
 │   ├── index.js
@@ -62,32 +64,41 @@ $ s deploy
 ```yml
 # s.yml
 edition: 1.0.0 # 命令行YAML规范版本，遵循语义化版本（Semantic Versioning）规范
-name: oss-demo # (必填) 项目名称
-access: 'hfs-access'
+name: oss # (必填) 项目名称
+vars:
+  region: cn-beijing
 
 services:
-  oss-demo:
+  oss:
     component: oss # (必填) 引用 component 的名称
     access: default
     props:
-      bucket: my-bucket
-      src:
-        codeUri: './src'
-        publishDir: './build'
-        index: index.html
-        error: index.html
-      region: cn-hangzhou
+      region: ${vars.region}
+      bucket: wlltest-wlltest2
+      acl: public-read
+      codeUri: ./build
+      ossObject: wllAssignObject
+      cors:
+        [
+          {
+            allowedOrigin: ['https://oss.console.aliyun.com'],
+            allowedMethod: ['GET', 'PUT', 'DELETE', 'POST', 'HEAD'],
+          },
+          { allowedOrigin: ['https://www.aliyun.com'], allowedMethod: ['GET'] },
+        ]
+      referer: { allowEmpty: true, referers: ['https://edasnext.console.aliyun.com'] }
+      static:
+      endpoint:
 ```
 
 当你根据该配置文件更新配置字段后，再次运行 `s deploy`
 
-
-
 ## 账号配置
-通过serverless Devs工具添加密钥信息
+
+通过 serverless Devs 工具添加密钥信息
+
 ```
 $ s config add
 ```
+
 注意：本组件只支持阿里云，需要选择阿里云密钥信息
-
-

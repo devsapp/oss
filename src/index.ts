@@ -53,7 +53,7 @@ export default class OssComponent extends Base {
   }
   /**
    * upload file
-   * @param inputs
+   * @param ossClient staticPath  ossObject
    */
   async upload(ossClient: OssClient, staticPath: string, ossObject: string) {
     const paths = walkSync(staticPath);
@@ -85,7 +85,7 @@ export default class OssComponent extends Base {
     }
   }
   /**
-   * 部署
+   * deploy
    * @param inputs
    */
   async deploy(inputs: InputProps) {
@@ -105,7 +105,6 @@ export default class OssComponent extends Base {
     const ossRegion = `oss-${get(inputs, 'props.region')}`;
     const ossBucket = get(inputs, 'props.bucket');
     const ossAcl = get(inputs, 'props.acl') || 'private';
-    const ossCors = get(inputs, 'props.cors');
     const ossReferer = get(inputs, 'props.referer', {});
     const ossObject = get(inputs, 'props.ossObject');
     const { allowEmpty, referers: ossReferers } = ossReferer;
@@ -133,9 +132,10 @@ export default class OssComponent extends Base {
     // add attr to bucket and upload object
     try {
       // update ossAcl
-      ossAcl && (await ossClient.putBucketACL(ossBucket, ossAcl));
-      // update ossCors
-      ossCors && (await ossClient.putBucketCORS(ossBucket, ossCors));
+      await ossClient.putBucketACL(ossBucket, ossAcl);
+      // update ossCors allowedOrigin allowedMethod 必须填写
+      const ossCors = get(inputs, 'props.cors', []);
+      !isEmpty(ossCors) && (await ossClient.putBucketCORS(ossBucket, ossCors));
       // update ossReferer
       if (allowEmpty && allowEmpty.toString() && ossReferers) {
         await ossClient.putBucketReferer(ossBucket, allowEmpty, ossReferers);
@@ -157,10 +157,10 @@ export default class OssComponent extends Base {
           index: 2,
           redirect: 0,
         };
-        const subDirType = typeMap[subDir.type] || 1;
+        const subDirType = get(typeMap, subDir.type, 1);
         websiteConfig.type = subDirType;
       }
-      index && error && (await ossClient.putBucketWebsite(ossBucket, websiteConfig));
+      await ossClient.putBucketWebsite(ossBucket, websiteConfig);
       deployLoading.succeed('OSS static source deployed success');
       await ossClient.getBucketWebsite(ossBucket);
       result = {

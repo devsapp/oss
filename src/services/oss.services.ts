@@ -17,13 +17,13 @@ interface ISrc {
 export interface IOssConfig {
   accessKeyId: string;
   accessKeySecret: string;
-  region: string;
+  region?: string;
   bucket?: string;
-  endpoint?: string;
-  cname?: boolean
   cors?: OssClient.CORSRule[];
   src?: ISrc;
   acl?: string;
+  cname?: boolean;
+  endpoint?: string;
 }
 export interface IOssStatic {
   index: string;

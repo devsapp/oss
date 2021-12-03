@@ -6,7 +6,7 @@ https://eslint.org/docs/rules/no-await-in-loop
 
 # action
 
-- 上传文件、指定目录
+- 上传文件、指定目录[done]
   没有 option 参数指定目录，是否帮用户本地创建指定目录文件夹；
   SDK 是不是就是在本地创建文件夹
   https://help.aliyun.com/document_detail/111266.html；
@@ -17,3 +17,8 @@ https://eslint.org/docs/rules/no-await-in-loop
   拼接
   oss 控制台地址；
   index.html 地址；
+- 自定义域名
+  - 引用 domain 组件实现；
+    https://github.com/devsapp/domain
+  - custome domain---fc-domain
+    https://github.com/devsapp/fc/blob/main/docs/Others/yaml.md#customDomains%E5%AD%97%E6%AE%B5

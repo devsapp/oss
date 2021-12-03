@@ -9,7 +9,7 @@ Tags:
   - OSS组件
 Category: 基础云服务
 Commands:
-  deploy: 部署OSS静态资源项目
+  deploy: 部署OSS静态资源
 Properties:
   region:
     Description: 地域
@@ -41,11 +41,6 @@ Properties:
     Required: True
     Type:
       - String
-  ossObject:
-    Description: OSS Object
-    Required: True
-    Type:
-      - String
   acl:
     Description: OSS bucket 权限 、 文件上传继承OSS bucket权限  
     Required: False
@@ -57,6 +52,11 @@ Properties:
   codeUri: 
     Description: 本地需要上传的文件
     Required: True
+    Type:
+      - String
+  ossObject: 
+    Description: 指定目录
+    Required: False
     Type:
       - String
   cors:
@@ -134,6 +134,9 @@ Properties:
                         - redirect
                         - noSuchKey
                         - index
-
-
+  # endpoint:
+  #   Description: 自定义域名
+  #   Required: False
+  #   Type:
+  #     - String
                  

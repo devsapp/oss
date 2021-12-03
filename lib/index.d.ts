@@ -15,11 +15,11 @@ export default class OssComponent extends Base {
     bucketIsExisting(client: OssClient, bucket: string, ossAcl?: ACLType): Promise<boolean>;
     /**
      * upload file
-     * @param inputs
+     * @param ossClient staticPath  ossObject
      */
     upload(ossClient: OssClient, staticPath: string, ossObject: string): Promise<void>;
     /**
-     * 部署
+     * deploy
      * @param inputs
      */
     deploy(inputs: InputProps): Promise<any>;
