@@ -32,6 +32,11 @@ services:
         subDir: {
           type: redirect
         }
-      endpoint: http://pet.three5.xyz
-        # oss.three5.xyz
+      cdn:
+      hosts:
+        - host: auto
+          https:
+            certInfo:
+              certType: free
+              switch: 'off'
 

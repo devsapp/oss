@@ -47,3 +47,14 @@ export interface IResBucket {
 }
 declare const _default: (ossConfig: IOssConfig) => Promise<void>;
 export default _default;
+export declare function buildSpawnSync(hook: string, src: string): Promise<void>;
+/**
+ * bucket is existing?
+ * @param : client, bucket, ossAcl = 'private'
+ */
+export declare function bucketIsExisting(client: OssClient, bucket: string, ossAcl?: ACLType): Promise<boolean>;
+/**
+ * upload file
+ * @param ossClient staticPath  subDir
+ */
+export declare function put(ossClient: OssClient, staticPath: string, subDir: string): Promise<void>;

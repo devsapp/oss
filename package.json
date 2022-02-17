@@ -3,8 +3,9 @@
   "version": "0.0.8",
   "main": "./lib/index.js",
   "autoInstall": false,
-  "dependencies": {},
   "devDependencies": {
+    "@alicloud/alidns20150109": "^2.0.1",
+    "@alicloud/cdn20180510": "^1.0.4",
     "@serverless-devs/core": "latest",
     "@types/ali-oss": "^6.0.7",
     "@types/eslint": "^7.2.6",
@@ -51,5 +52,8 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
+  },
+  "dependencies": {
+    "@alicloud/openapi-client": "^0.2.1"
   }
 }
