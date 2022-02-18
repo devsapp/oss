@@ -71,14 +71,14 @@ vars:
 services:
   oss:
     component: oss # (必填) 引用 component 的名称
-    access: default
+    access: default # 权限
     props:
-      region: ${vars.region}
-      bucket: wlltest-wlltest2
-      acl: public-read
-      codeUri: ./build
-      ossObject: wllAssignObject
-      cors:
+      region: ${vars.region} 
+      bucket: wlltest-wlltest2 # OSS bucket
+      acl: public-read # 权限
+      codeUri: ./build # 指定本地要上传目录文件地址
+      subDir: wllAssignObject # 指定OSS Bucket 文件上传目录
+      cors: # OSS 设置跨域资源共享规则
         [
           {
             allowedOrigin: ['https://oss.console.aliyun.com'],
@@ -86,12 +86,24 @@ services:
           },
           { allowedOrigin: ['https://www.aliyun.com'], allowedMethod: ['GET'] },
         ]
-      referer: { allowEmpty: true, referers: ['https://edasnext.console.aliyun.com'] }
-      static:
-      endpoint:
+      referer: # OSS 设置Referer防盗链
+        { allowEmpty: true, referers: ['https://edasnext.console.aliyun.com'] }
+      website: # OSS 静态网站配置
+      hosts: # OSS 绑定域名
 ```
 
-当你根据该配置文件更新配置字段后，再次运行 `s deploy`
+当你根据该配置文件更新配置字段后，再次运行 `s deploy` 
+
+`s -h` 可查看更多指令
+
+
+
+## 近期计划
+目前只支持系统自动生成域名 
+
+- [x] **绑定自定义域名** - hosts的host属性目前只支持auto，系统生成域名
+- [x] **CDN组件** - 允许用户配置CDN相关属性，同步CDN控制台
+- [x] **极速部署** - 仅需几秒，部署你的静态网站。
 
 ## 账号配置
 

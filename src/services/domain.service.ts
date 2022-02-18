@@ -176,8 +176,6 @@ const generateSystemDomain = async (params: IDomainParams) => {
   }
 
   logger.debug(`Test Domain: ${sysDomain}`);
-  console.log('sysDomain', sysDomain);
-  return {};
   await setDomainAdvancedConfig(cdnClient, { domain: sysDomain, hostObj });
 
   // 添加边缘脚本

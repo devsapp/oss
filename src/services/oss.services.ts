@@ -33,8 +33,8 @@ export interface IOssStatic {
 export interface IOssRes {
   Bucket: string;
   Region: string;
-  ossAddress: string;
-  indexHtml?: string;
+  OssAddress?: string;
+  Domains?: string | string[];
 }
 export type ACLType = 'public-read-write' | 'public-read' | 'private';
 export interface ISubDir {

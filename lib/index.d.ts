@@ -17,6 +17,8 @@ export default class OssComponent extends Base {
     /**
      * domain
      * @param inputs
+     * 全不变亮植入domain组件，会报错，所以只获取domain相关的参数
+     * report oss response
      */
-    domain(inputs: InputProps): Promise<void>;
+    domain(inputs: InputProps): Promise<any[]>;
 }

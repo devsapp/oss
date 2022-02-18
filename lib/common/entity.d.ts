@@ -13,6 +13,7 @@ export interface ICredentials {
 }
 export interface InputProps {
     props: any;
+    Properties?: any;
     credentials: ICredentials;
     appName: string;
     project: {

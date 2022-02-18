@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { spinner, reportComponent, getCredential } from '@serverless-devs/core';
 import OssClient from 'ali-oss';
 import {
@@ -90,14 +91,20 @@ export default class OssComponent extends Base {
         websiteConfig.type = subDirType;
       }
       await ossClient.putBucketWebsite(ossBucket, websiteConfig);
-      deployLoading.succeed('OSS website source deployed success');
-      // Map the domain name
+      // domain
+      const hosts = get(inputs, 'props.hosts', {});
       const result: IOssRes = {
         Bucket: ossBucket,
         Region: get(inputs, 'props.region'),
-        ossAddress: `https://oss.console.aliyun.com/bucket/${ossRegion}/${ossBucket}/object`,
       };
-      index && (result.indexHtml = `http://${ossBucket}.${ossRegion}.aliyuncs.com/${index}`);
+      if (isEmpty(hosts)) {
+        result.OssAddress = `https://oss.console.aliyun.com/bucket/${ossRegion}/${ossBucket}/object`;
+      } else {
+        // attr bucket region hosts
+        const domainList = await this.domain(inputs);
+        result.Domains = domainList;
+      }
+      deployLoading.succeed('OSS website source deployed success');
       return result;
     } catch (e) {
       return {
@@ -109,8 +116,53 @@ export default class OssComponent extends Base {
   /**
    * domain
    * @param inputs
+   * 全不变亮植入domain组件，会报错，所以只获取domain相关的参数
+   * report oss response
    */
   async domain(inputs: InputProps) {
-    await domain(inputs);
+    const { props, Properties, ...rest } = inputs;
+    const { bucket, region, hosts } = get(inputs, 'props', {});
+    const domianProps = {
+      bucket,
+      region,
+      hosts,
+    };
+    const domainParms = { props: domianProps, Properties: domianProps, ...rest };
+    const domains = await domain(domainParms);
+
+    const report_content = {
+      oss: [
+        {
+          region: get(inputs, 'props.region'),
+          bucket: get(inputs, 'props.bucket'),
+        },
+      ],
+    };
+
+    const result = {
+      Region: get(inputs, 'props.region'),
+      Bucket: get(inputs, 'props.bucket'),
+    };
+
+    if (domains.length > 0) {
+      result['Domains'] = domains;
+      report_content['url'] = [];
+      report_content['cdn'] = [];
+      for (let i = 0; i < domains.length; i++) {
+        const tempUrl = {};
+        tempUrl[`Domain_${i}`] = domains[i];
+        report_content['url'].push(tempUrl);
+        report_content['cdn'].push({
+          region: get(inputs, 'props.region'),
+          domain: domains[i],
+        });
+      }
+    }
+    super.__report({
+      name: 'oss',
+      access: inputs.project.access,
+      content: result,
+    });
+    return domains;
   }
 }

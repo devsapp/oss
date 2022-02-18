@@ -54,8 +54,8 @@ Properties:
     Required: True
     Type:
       - String
-  ossObject:
-    Description: 指定目录
+  subDir:
+    Description: 上传文件指定目录
     Required: False
     Type:
       - String
@@ -103,7 +103,7 @@ Properties:
           Required: True
           Type:
             - List<String>
-  static:
+  website:
     Description: 静态网站
     Required: False
     Type:
@@ -135,8 +135,14 @@ Properties:
                         - redirect
                         - noSuchKey
                         - index
-  # endpoint:
-  #   Description: 自定义域名
-  #   Required: False
-  #   Type:
-  #     - String
+  hosts:
+    Description: 绑定域名
+    Required: False
+    Type:
+      - List<Struct>:
+        host:
+            Description: 域名设置，目前支持系统自动生成域名，设置auto
+            Required: True
+            Default: auto
+            Type:
+              - String

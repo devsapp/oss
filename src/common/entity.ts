@@ -13,6 +13,7 @@ export interface ICredentials {
 }
 export interface InputProps {
   props: any; // 用户自定义输入
+  Properties?: any;
   credentials: ICredentials; // 用户秘钥
   appName: string; //
   project: {

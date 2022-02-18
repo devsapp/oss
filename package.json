@@ -6,7 +6,7 @@
   "devDependencies": {
     "@alicloud/alidns20150109": "^2.0.1",
     "@alicloud/cdn20180510": "^1.0.4",
-    "@serverless-devs/core": "latest",
+    "@serverless-devs/core": "^0.1.28",
     "@types/ali-oss": "^6.0.7",
     "@types/eslint": "^7.2.6",
     "@types/express": "^4.17.11",
