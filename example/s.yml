@@ -8,35 +8,35 @@ services:
     access: wll
     props:
       region: ${vars.region}
-      bucket: wlltest-2022-${vars.region}-3
-      # acl: public-read 
-      # codeUri: ./build
-      # subDir: wllAssignObject2022
-      # cors: [
-      #   { 
-      #     allowedOrigin: ['https://oss.console.aliyun.com'],
-      #     allowedMethod: ['GET','PUT','DELETE','POST','HEAD']
-      #   },
-      #   { 
-      #     allowedOrigin: ['https://www.aliyun.com'],
-      #     allowedMethod: ['GET']
-      #   }
-      # ]
-      # referer: {
-      #     allowEmpty: true,
-      #     referers: ['https://edasnext.console.aliyun.com']
-      # }
-      # website:
-      #   index: index.html
-      #   error: 404.html
-      #   subDir: {
-      #     type: redirect
-      #   }
-      # cdn:
-      # hosts:
-      #   - host: auto
-      #     https:
-      #       certInfo:
-      #         certType: free
-      #         switch: 'off'
+      bucket: wlltest-2022-${vars.region}-5  # auto string 自动
+      acl: public-read 
+      codeUri: ./build
+      subDir: wllAssignObject2022
+      cors: [
+        { 
+          allowedOrigin: ['https://oss.console.aliyun.com'],
+          allowedMethod: ['GET','PUT','DELETE','POST','HEAD']
+        },
+        { 
+          allowedOrigin: ['https://www.aliyun.com'],
+          allowedMethod: ['GET']
+        }
+      ]
+      referer: {
+          allowEmpty: true,
+          referers: ['https://edasnext.console.aliyun.com']
+      }
+      website:
+        index: index.html
+        error: 404.html
+        subDir: {
+          type: redirect
+        }
+      cdn:
+      customDomains: # customDomains
+        - domainName: auto 
+          https:
+            certInfo:
+              certType: free
+              switch: 'off'
 

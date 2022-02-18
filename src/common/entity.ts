@@ -28,6 +28,11 @@ export interface InputProps {
     configPath: string; // 配置路径
   };
 }
+export interface IDomainProps {
+  domainName?: String;
+  https?: any;
+  host?: any;
+}
 
 export interface Code {
   /**

@@ -28,6 +28,11 @@ export interface InputProps {
         configPath: string;
     };
 }
+export interface IDomainProps {
+    domainName?: String;
+    https?: any;
+    host?: any;
+}
 export interface Code {
     /**
      * bucket地址

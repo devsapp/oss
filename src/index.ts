@@ -12,8 +12,8 @@ import {
 import domain from './services/domain.service';
 import { logger } from './common';
 import Base from './common/base';
-import { InputProps } from './common/entity';
-import { get, isEmpty } from 'lodash';
+import { InputProps, IDomainProps } from './common/entity';
+import { get, isEmpty, map } from 'lodash';
 
 export interface IResBucket {
   remoteAddress: string;
@@ -92,15 +92,15 @@ export default class OssComponent extends Base {
       }
       await ossClient.putBucketWebsite(ossBucket, websiteConfig);
       // domain
-      const hosts = get(inputs, 'props.hosts', {});
+      const customDomains = get(inputs, 'props.customDomains', {});
       const result: IOssRes = {
         Bucket: ossBucket,
         Region: get(inputs, 'props.region'),
       };
-      if (isEmpty(hosts)) {
+      if (isEmpty(customDomains)) {
         result.OssAddress = `https://oss.console.aliyun.com/bucket/${ossRegion}/${ossBucket}/object`;
       } else {
-        // attr bucket region hosts
+        // attr bucket region customDomains
         const domainList = await this.domain(inputs);
         result.Domains = domainList;
       }
@@ -121,7 +121,11 @@ export default class OssComponent extends Base {
    */
   async domain(inputs: InputProps) {
     const { props, Properties, ...rest } = inputs;
-    const { bucket, region, hosts } = get(inputs, 'props', {});
+    const { bucket, region, customDomains } = get(inputs, 'props', {});
+    const hosts = map(customDomains, (child: IDomainProps) => ({
+      host: child.domainName,
+      ...child,
+    }));
     const domianProps = {
       bucket,
       region,
