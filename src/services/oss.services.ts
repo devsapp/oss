@@ -54,50 +54,6 @@ export interface IResBucket {
   requestUrls?: string;
 }
 
-export default async (ossConfig: IOssConfig) => {
-  const { bucket, region, accessKeyId, accessKeySecret, src, cors } = ossConfig;
-  if (src.buildCommand) {
-    await buildSpawnSync(src.buildCommand, src.codeUri);
-  }
-  // 构造oss客户端
-  let ossClient = new OssClient({
-    bucket,
-    region: `oss-${region}`,
-    accessKeyId,
-    accessKeySecret,
-  });
-
-  // bucket, 不存在此bucket,则创建: 并且加上权限
-  await getOrCreateBucket(ossClient, bucket);
-  // region重新赋值
-  const location = await ossClient.getBucketLocation(bucket);
-  ossClient = new OssClient({
-    bucket,
-    region: location.location,
-    accessKeyId,
-    accessKeySecret,
-  });
-  // 文件上传
-  await put(ossClient, src.publishDir);
-
-  // 配置静态托管
-  const ossConfigObj = { index: src.index, error: src.error };
-  if (src.subDir && src.subDir.type) {
-    ossConfigObj['supportSubDir'] = true;
-    ossConfigObj['type'] =
-      {
-        noSuchKey: 1,
-        index: 2,
-        redirect: 0,
-      }[src.subDir.type] || 1;
-  }
-  await ossClient.putBucketWebsite(bucket, ossConfigObj);
-  // 设置跨域资源共享规则
-  if (cors) {
-    await ossClient.putBucketCORS(bucket, cors);
-  }
-};
-
 export async function buildSpawnSync(hook: string, src: string) {
   const result = spawnSync(hook, [], {
     cwd: path.resolve(process.cwd(), src),

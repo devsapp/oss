@@ -45,8 +45,6 @@ export interface IResBucket {
     remotePort?: string;
     requestUrls?: string;
 }
-declare const _default: (ossConfig: IOssConfig) => Promise<void>;
-export default _default;
 export declare function buildSpawnSync(hook: string, src: string): Promise<void>;
 /**
  * bucket is existing?
@@ -58,3 +56,4 @@ export declare function bucketIsExisting(client: OssClient, bucket: string, ossA
  * @param ossClient staticPath  subDir
  */
 export declare function put(ossClient: OssClient, staticPath: string, subDir: string): Promise<void>;
+export {};
