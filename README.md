@@ -89,21 +89,34 @@ services:
       referer: # OSS 设置Referer防盗链
         { allowEmpty: true, referers: ['https://edasnext.console.aliyun.com'] }
       website: # OSS 静态网站配置
-      hosts: # OSS 绑定域名
+      hosts: # OSS 绑定域名，绑定域名意味着权限是 ACL 权限：【public-read】
 ```
 
 当你根据该配置文件更新配置字段后，再次运行 `s deploy` 
 
-`s -h` 可查看更多指令
+## 域名
 
+```
+$ s domain
+
+```
+在 `s.yml`文件里，绑定OSS域名，前置条件： 
+
++ bucket 存在
++ OSS ACL 权限为public-readsss
++ 配置s.yml hosts属性
+
+
+ 
 
 
 ## 近期计划
-目前只支持系统自动生成域名 
+目前只支持系统自动生成域名，新增功能及优化：
 
-- [x] **绑定自定义域名** - hosts的host属性目前只支持auto，系统生成域名
-- [x] **CDN组件** - 允许用户配置CDN相关属性，同步CDN控制台
-- [x] **极速部署** - 仅需几秒，部署你的静态网站。
+- [ ] **绑定自定义域名** - hosts的host属性目前只支持auto，系统生成域名
+- [ ] **移除域名** - s removeDomain * 移除绑定的域名
+- [ ] **OSS ACL权限** - 绑定域名后，如果设置过一次public-read，后期均可访问资源；增加OSS ACL和 CDN绑定与解绑关系
+- [ ] **CDN组件** - 允许用户配置CDN相关属性，同步CDN控制台
 
 ## 账号配置
 

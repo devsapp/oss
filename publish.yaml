@@ -10,6 +10,7 @@ Tags:
 Category: 基础云服务
 Commands:
   deploy: 部署OSS静态资源
+  domain: 系统自动生成域名
 Properties:
   region:
     Description: 地域
@@ -136,7 +137,7 @@ Properties:
                         - noSuchKey
                         - index
   hosts:
-    Description: 绑定域名
+    Description: 绑定域名，默人ACL权限：public-read
     Required: False
     Type:
       - List<Struct>:
