@@ -1,4 +1,5 @@
 import OssClient from 'ali-oss';
+import { InputProps } from '../common/entity';
 interface ISrc {
     subDir: any;
     publishDir: string;
@@ -56,4 +57,20 @@ export declare function bucketIsExisting(client: OssClient, bucket: string, ossA
  * @param ossClient staticPath  subDir
  */
 export declare function put(ossClient: OssClient, staticPath: string, subDir: string): Promise<void>;
+/**
+ * domain
+ * @param inputs
+ * 全不变量植入domain组件，会报错，所以只获取domain相关的参数
+ */
+export declare function bindDomain(inputs: InputProps): Promise<{
+    domains: any[];
+    reportContent: {
+        name: string;
+        access: string;
+        content: {
+            Region: any;
+            Bucket: any;
+        };
+    };
+}>;
 export {};

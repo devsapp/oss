@@ -8,12 +8,13 @@ import {
   IOssRes,
   bucketIsExisting,
   put,
+  bindDomain,
 } from './services/oss.services';
-import domain from './services/domain.service';
 import { logger } from './common';
 import Base from './common/base';
-import { InputProps, IDomainProps } from './common/entity';
-import { get, isEmpty, map } from 'lodash';
+import { InputProps } from './common/entity';
+import { get, isEmpty } from 'lodash';
+import fs from 'fs-extra';
 
 export interface IResBucket {
   remoteAddress: string;
@@ -60,8 +61,13 @@ export default class OssComponent extends Base {
       bucket: ossBucket,
     });
     const deployLoading = spinner('The Oss is deploying');
-
-    // add attr to bucket and put object
+    // file is existing?
+    const ossSrc = get(inputs, 'props.codeUri');
+    if (!fs.existsSync(ossSrc)) {
+      const errString = `no such file or directory, stat '${ossSrc}'`;
+      deployLoading.fail(errString, 'warning');
+      return;
+    }
     try {
       // update ossAcl
       await ossClient.putBucketACL(ossBucket, ossAcl);
@@ -72,8 +78,7 @@ export default class OssComponent extends Base {
       const ossReferer = get(inputs, 'props.referer', {});
       const { allowEmpty = true, referers: ossReferers = [] } = ossReferer;
       await ossClient.putBucketReferer(ossBucket, allowEmpty, ossReferers);
-      // put file
-      const ossSrc = get(inputs, 'props.codeUri');
+      // put file ossSrc
       const ossSubDir = get(inputs, 'props.subDir');
       await put(ossClient, ossSrc, ossSubDir);
       // update website
@@ -92,7 +97,7 @@ export default class OssComponent extends Base {
         websiteConfig.type = subDirType;
       }
       await ossClient.putBucketWebsite(ossBucket, websiteConfig);
-      // domain
+      // bindDomain
       const customDomains = get(inputs, 'props.customDomains', {});
       const result: IOssRes = {
         Bucket: ossBucket,
@@ -102,72 +107,18 @@ export default class OssComponent extends Base {
         result.OssAddress = `https://oss.console.aliyun.com/bucket/${ossRegion}/${ossBucket}/object`;
       } else {
         // attr bucket region customDomains
-        const domainList = await this.domain(inputs);
+        const { domains: domainList, reportContent } = await bindDomain(inputs);
+        // report oss response
+        super.__report(reportContent);
         result.Domains = domainList;
       }
       deployLoading.succeed('OSS website source deployed success');
       return result;
     } catch (e) {
+      deployLoading.fail('OSS website source deployed error');
       return {
-        errMesg: `Oss deploy Error:${e}`,
+        errMesg: e,
       };
     }
-  }
-
-  /**
-   * domain
-   * @param inputs
-   * 全不变亮植入domain组件，会报错，所以只获取domain相关的参数
-   * report oss response
-   */
-  async domain(inputs: InputProps) {
-    const { props, Properties, ...rest } = inputs;
-    const { bucket, region, customDomains } = get(inputs, 'props', {});
-    const hosts = map(customDomains, (child: IDomainProps) => ({
-      host: child.domainName,
-      ...child,
-    }));
-    const domianProps = {
-      bucket,
-      region,
-      hosts,
-    };
-    const domainParms = { props: domianProps, Properties: domianProps, ...rest };
-    const domains = await domain(domainParms);
-
-    const report_content = {
-      oss: [
-        {
-          region: get(inputs, 'props.region'),
-          bucket: get(inputs, 'props.bucket'),
-        },
-      ],
-    };
-
-    const result = {
-      Region: get(inputs, 'props.region'),
-      Bucket: get(inputs, 'props.bucket'),
-    };
-
-    if (domains.length > 0) {
-      result['Domains'] = domains;
-      report_content['url'] = [];
-      report_content['cdn'] = [];
-      for (let i = 0; i < domains.length; i++) {
-        const tempUrl = {};
-        tempUrl[`Domain_${i}`] = domains[i];
-        report_content['url'].push(tempUrl);
-        report_content['cdn'].push({
-          region: get(inputs, 'props.region'),
-          domain: domains[i],
-        });
-      }
-    }
-    super.__report({
-      name: 'oss',
-      access: inputs.project.access,
-      content: result,
-    });
-    return domains;
   }
 }

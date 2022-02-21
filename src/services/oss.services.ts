@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import OssClient from 'ali-oss';
 import { spinner, inquirer } from '@serverless-devs/core';
 import path from 'path';
 import { spawnSync } from 'child_process';
 import { logger } from '../common';
 import walkSync from 'walk-sync';
+import { InputProps, IDomainProps } from '../common/entity';
 import fs from 'fs-extra';
+import { get, map } from 'lodash';
+import domain from '../services/domain.service';
 
 interface ISrc {
   subDir: any;
@@ -136,4 +140,61 @@ export async function put(ossClient: OssClient, staticPath: string, subDir: stri
       }
     }
   }
+}
+/**
+ * domain
+ * @param inputs
+ * 全不变量植入domain组件，会报错，所以只获取domain相关的参数
+ */
+export async function bindDomain(inputs: InputProps) {
+  const { props, Properties, ...rest } = inputs;
+  const { bucket, region, customDomains } = get(inputs, 'props', {});
+  const hosts = map(customDomains, (child: IDomainProps) => ({
+    host: child.domainName,
+    ...child,
+  }));
+  const domianProps = {
+    bucket,
+    region,
+    hosts,
+  };
+  const domainParms = { props: domianProps, Properties: domianProps, ...rest };
+  const domains = await domain(domainParms);
+
+  const report_content = {
+    oss: [
+      {
+        region: get(inputs, 'props.region'),
+        bucket: get(inputs, 'props.bucket'),
+      },
+    ],
+  };
+
+  const result = {
+    Region: get(inputs, 'props.region'),
+    Bucket: get(inputs, 'props.bucket'),
+  };
+
+  if (domains.length > 0) {
+    result['Domains'] = domains;
+    report_content['url'] = [];
+    report_content['cdn'] = [];
+    for (let i = 0; i < domains.length; i++) {
+      const tempUrl = {};
+      tempUrl[`Domain_${i}`] = domains[i];
+      report_content['url'].push(tempUrl);
+      report_content['cdn'].push({
+        region: get(inputs, 'props.region'),
+        domain: domains[i],
+      });
+    }
+  }
+  return {
+    domains,
+    reportContent: {
+      name: 'oss',
+      access: inputs.project.access,
+      content: result,
+    },
+  };
 }
