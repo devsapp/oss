@@ -1,6 +1,6 @@
 {
   "name": "oss",
-  "version": "0.0.10",
+  "version": "0.0.12",
   "main": "./lib/index.js",
   "autoInstall": false,
   "devDependencies": {
