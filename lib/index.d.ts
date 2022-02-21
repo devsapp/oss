@@ -10,6 +10,7 @@ export default class OssComponent extends Base {
     /**
      * deploy
      * @param inputs
+     *
      */
     deploy(inputs: InputProps): Promise<IOssRes | {
         errMesg: string;

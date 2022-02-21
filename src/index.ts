@@ -25,6 +25,7 @@ export default class OssComponent extends Base {
   /**
    * deploy
    * @param inputs
+   *
    */
   async deploy(inputs: InputProps) {
     let credentials = get(inputs, 'credentials');
