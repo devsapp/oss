@@ -32,7 +32,7 @@
   "scripts": {
     "start": "rimraf lib && npx tsc -w -p tsconfig.json",
     "prebuild": "rm -rf lib",
-    "build": "ncc build src/index.ts -m -e @serverless-devs/core -o lib",
+    "build": "ncc build src/index.ts -m -e @serverless-devs/core -e @alicloud/openapi-client -o lib",
     "test": "jest",
     "test:cov": "jest --coverage",
     "lint": "f2elint scan",
