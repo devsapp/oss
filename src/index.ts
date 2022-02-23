@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/dot-notation */
-import { spinner, reportComponent, getCredential } from '@serverless-devs/core';
+import * as cores from '@serverless-devs/core';
 import OssClient from 'ali-oss';
 import {
   IOssConfig,
@@ -13,6 +13,7 @@ import {
 import { logger } from './common';
 import Base from './common/base';
 import { InputProps } from './common/entity';
+import { DEPLOY_HELP_INFO } from './common/contants';
 import { get, isEmpty } from 'lodash';
 import fs from 'fs-extra';
 
@@ -29,6 +30,19 @@ export default class OssComponent extends Base {
    *
    */
   async deploy(inputs: InputProps) {
+    const { spinner, reportComponent, getCredential, commandParse, help: coreHelp } = cores;
+    // 参数提示信息
+    const parsedArgs: { [key: string]: any } = commandParse(inputs, {
+      boolean: ['help', 'assume-yes'],
+      string: ['type'],
+      alias: { help: ['h', 'H'], 'assume-yes': ['y', 'Y'] },
+    });
+    const argsData: any = parsedArgs?.data || {};
+    const help: boolean = argsData.h || argsData.help;
+    if (help) {
+      coreHelp(DEPLOY_HELP_INFO);
+      return;
+    }
     let credentials = get(inputs, 'credentials');
     if (isEmpty(credentials)) {
       credentials = await getCredential(inputs, inputs.project.access);
@@ -54,7 +68,8 @@ export default class OssComponent extends Base {
     // oss clinet
     let ossClient = new OssClient(ossConfig);
     // bucket is existing?
-    const isContinue = await bucketIsExisting(ossClient, ossBucket, ossAcl);
+    const assumeYes: boolean = argsData.y || argsData.assumeYes || argsData['assume-yes'];
+    const isContinue = await bucketIsExisting(ossClient, ossBucket, ossAcl, assumeYes);
     if (!isContinue) return;
     ossClient = new OssClient({
       ...ossConfig,

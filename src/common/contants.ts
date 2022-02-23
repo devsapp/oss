@@ -40,3 +40,54 @@ export const CDN_ERRORS = {
   DomainNotRegistration:
     '域名尚未备案。欲了解备案，中国站用户前往<a href="https://beian.aliyun.com" target="_blank">备案</a>。国际站用户前往<a href="https://www.alibabacloud.com/zh/icp">ICP 注册支持</a>。',
 };
+
+export const DEPLOY_HELP_INFO = [
+  {
+    header: 'Deploy',
+    content: 'Oss uploads files And bind Domain',
+  },
+  {
+    header: 'Usage',
+    content: '$ s deploy <options>',
+  },
+  {
+    header: 'Options',
+    optionList: [
+      {
+        name: 'y, -y, -Y',
+        description: 'Assume that the answer to any question which would be asked is yes.',
+        type: Boolean,
+      },
+      {
+        name: 'h, -h, -H',
+        description: 'Display help for command',
+        type: Boolean,
+      },
+    ],
+  },
+  {
+    header: 'Global Options',
+    optionList: [
+      {
+        name: 'assume-yes',
+        description: 'Assume that the answer to any question which would be asked is yes.',
+        alias: 'y',
+        type: Boolean,
+      },
+      {
+        name: 'help',
+        description: 'Display help for the command of [s deploy]',
+        alias: 'h',
+        type: Boolean,
+      },
+    ],
+  },
+  {
+    header: 'Examples with Yaml',
+    content: ['$ s {bold deploy}', '$ s <ProjectName> {bold deploy}'],
+  },
+  {
+    header: 'Examples with CLI',
+    content: ['You can refer to the usage of s and execute [s -h] for help'],
+  },
+];

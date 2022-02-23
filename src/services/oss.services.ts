@@ -76,6 +76,7 @@ export async function bucketIsExisting(
   client: OssClient,
   bucket: string,
   ossAcl: ACLType = 'private',
+  assumeYes: Boolean,
 ) {
   try {
     await client.getBucketInfo(bucket);
@@ -84,14 +85,19 @@ export async function bucketIsExisting(
     if (error.name === 'NoSuchBucketError') {
       // NoSuchBucketError
       // create bucket ?
-      const res = await inquirer.prompt([
-        {
-          type: 'confirm',
-          name: 'needToCreate',
-          message: `The bucket ${bucket} is inexistent, create the ${bucket} now?`,
-        },
-      ]);
-      if (res.needToCreate) {
+      let autoCreateObj = { needToCreate: false };
+      if (assumeYes) {
+        autoCreateObj = { needToCreate: true };
+      } else {
+        autoCreateObj = await inquirer.prompt([
+          {
+            type: 'confirm',
+            name: 'needToCreate',
+            message: `The bucket ${bucket} is inexistent, create the ${bucket} now?`,
+          },
+        ]);
+      }
+      if (autoCreateObj.needToCreate) {
         // create bucket
         const createLoading = spinner(`The bucket of ${bucket} is creating`);
         await client.putBucket(bucket);

@@ -106,6 +106,8 @@ services:
 - [x] **OSS ACL权限** - 绑定域名后，如果设置过一次public-read，后期均可访问资源；增加OSS ACL和 CDN绑定与解绑关系 【缓存、延迟】 
 - [ ] **函数** - 指令参数 参考：s deploy -h
 - [ ] **移除** - s remove * 移除绑定的资源(*)、配置； 参考：s remove -h
+- [ ] **支持CICD -y** - s deploy -y 默认自动创建bucket; s deploy -y
+- [ ] **支持 -h** - 提示信息 s deploy -h、s deploy -help
 
 ## 账号配置
 
