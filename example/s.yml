@@ -9,7 +9,8 @@ services:
     props:
       region: ${vars.region}
       bucket: auto
-      acl: public-read
+      # wlltest-2022-cn-hangzhou-13
+      acl: private
       codeUri: ./build
       subDir: wllAssignObject2022
       cors: [
