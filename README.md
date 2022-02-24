@@ -74,7 +74,7 @@ services:
     access: default # 权限
     props:
       region: ${vars.region} 
-      bucket: wlltest-wlltest2 # OSS bucket
+      bucket: auto # OSS bucket 自动生成
       acl: public-read # 权限
       codeUri: ./build # 指定本地要上传目录文件地址
       subDir: wllAssignObject # 指定OSS Bucket 文件上传目录
@@ -101,14 +101,14 @@ services:
 
 - [ ] **绑定自定义域名** - hosts的host属性目前只支持auto，系统生成域名
 - [ ] **CDN组件** - 允许用户配置CDN相关属性，同步CDN控制台
-- [ ] **bucket** - bucket 名称如果是auto，自动生成一个bucket名称
-- [ ] **资源对比** - 本地资源与线上
-- [x] **OSS ACL权限** - 绑定域名后，如果设置过一次public-read，后期均可访问资源；增加OSS ACL和 CDN绑定与解绑关系 【缓存、延迟】 
+- [x] **bucket** - bucket 名称如果是auto，自动生成一个bucket名称
+- [ ] **资源对比** - 本地资源与线上diff
+- [x] **OSS ACL权限** - 如果设置绑定域名，OSS ACL 默认是public-read，
 - [ ] **函数** - 指令参数 参考：s deploy -h
 - [ ] **移除** - s remove * 移除绑定的资源(*)、配置； 参考：s remove -h
 - [x] **支持CICD -y** - s deploy -y 默认自动创建bucket; s deploy -y
 - [x] **支持 -h** - 提示信息 s deploy -h、s deploy -help
-- [ ] **【优化】** - get cdn name 和 uploading 文件的提示信息 重叠问题
+- [x] **【优化】** - get cdn name 和 uploading 文件的提示信息 重叠问题
 
 ## 账号配置
 

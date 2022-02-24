@@ -1,4 +1,9 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable require-atomic-updates */
 /* eslint-disable @typescript-eslint/dot-notation */
+/**
+ * serverless-devs-${region}-${serviceName}-${uid}
+ */
 import * as cores from '@serverless-devs/core';
 import OssClient from 'ali-oss';
 import {
@@ -9,20 +14,17 @@ import {
   bucketIsExisting,
   put,
   bindDomain,
+  handleInputs,
+  IHandleInputsRes,
 } from './services/oss.services';
 import { logger } from './common';
 import Base from './common/base';
 import { InputProps } from './common/entity';
 import { DEPLOY_HELP_INFO } from './common/contants';
-import { get, isEmpty } from 'lodash';
+import { every, get, isEmpty } from 'lodash';
 import fs from 'fs-extra';
 
-export interface IResBucket {
-  remoteAddress: string;
-  remotePort?: string;
-  requestUrls?: string;
-}
-
+const { reportComponent, getCredential, help: coreHelp } = cores;
 export default class OssComponent extends Base {
   /**
    * deploy
@@ -30,16 +32,12 @@ export default class OssComponent extends Base {
    *
    */
   async deploy(inputs: InputProps) {
-    const { spinner, reportComponent, getCredential, commandParse, help: coreHelp } = cores;
-    // 参数提示信息
-    const parsedArgs: { [key: string]: any } = commandParse(inputs, {
-      boolean: ['help', 'assume-yes'],
-      string: ['type'],
-      alias: { help: ['h', 'H'], 'assume-yes': ['y', 'Y'] },
-    });
-    const argsData: any = parsedArgs?.data || {};
-    const help: boolean = argsData.h || argsData.help;
-    if (help) {
+    logger.debug(
+      `[${get(inputs, 'project.projectName')}] inputs params: ${JSON.stringify(inputs, null, 2)}`,
+    );
+    const argsData: IHandleInputsRes = handleInputs(inputs);
+    const commandHelp = argsData.h || argsData.help;
+    if (commandHelp) {
       coreHelp(DEPLOY_HELP_INFO);
       return;
     }
@@ -47,46 +45,48 @@ export default class OssComponent extends Base {
     if (isEmpty(credentials)) {
       credentials = await getCredential(inputs, inputs.project.access);
     }
+    // common attribute
+    const { AccessKeyID, AccessKeySecret, AccountID: uid } = credentials;
+    const region = get(inputs, 'props.region');
+    const ossRegion = `oss-${region}`;
+    const customDomains = get(inputs, 'props.customDomains', {});
+    let ossBucket = get(inputs, 'props.bucket');
+    if (!ossBucket) {
+      logger.error('bucket is required For oss');
+      return;
+    } else if (ossBucket === 'auto') {
+      const serviceName = get(inputs, 'appName');
+      ossBucket = `serverless-devs-${region}-${serviceName}-${uid}-1`;
+    }
+    const ossAcl = get(inputs, 'props.acl', 'private');
     reportComponent('oss', {
-      uid: credentials.AccountID,
+      uid,
       command: 'deploy',
     });
-    logger.debug(
-      `[${get(inputs, 'project.projectName')}] inputs params: ${JSON.stringify(inputs, null, 2)}`,
-    );
-    // attr
-    const { AccessKeyID, AccessKeySecret } = credentials;
-    const ossRegion = `oss-${get(inputs, 'props.region')}`;
-    const ossBucket = get(inputs, 'props.bucket');
-    const ossAcl = get(inputs, 'props.acl', 'private');
-    // cofig
     const ossConfig: IOssConfig = {
       accessKeyId: AccessKeyID,
       accessKeySecret: AccessKeySecret,
       region: ossRegion,
     };
-    // oss clinet
     let ossClient = new OssClient(ossConfig);
     // bucket is existing?
-    const assumeYes: boolean = argsData.y || argsData.assumeYes || argsData['assume-yes'];
-    const isContinue = await bucketIsExisting(ossClient, ossBucket, ossAcl, assumeYes);
+    const isContinue = await bucketIsExisting(ossClient, ossBucket, ossAcl, argsData);
     if (!isContinue) return;
     ossClient = new OssClient({
       ...ossConfig,
       bucket: ossBucket,
     });
-    const deployLoading = spinner('The Oss is deploying');
     // file is existing?
     const ossSrc = get(inputs, 'props.codeUri');
     if (!fs.existsSync(ossSrc)) {
       const errString = `no such file or directory, stat '${ossSrc}'`;
-      deployLoading.fail(errString, 'warning');
+      logger.error(errString);
       return;
     }
     try {
       // update ossAcl
       await ossClient.putBucketACL(ossBucket, ossAcl);
-      // update ossCors allowedOrigin allowedMethod 必须填写
+      // update ossCors allowedOrigin allowedMethod,  params is required
       const ossCors = get(inputs, 'props.cors', []);
       !isEmpty(ossCors) && (await ossClient.putBucketCORS(ossBucket, ossCors));
       // update ossReferer
@@ -113,7 +113,6 @@ export default class OssComponent extends Base {
       }
       await ossClient.putBucketWebsite(ossBucket, websiteConfig);
       // bindDomain
-      const customDomains = get(inputs, 'props.customDomains', {});
       const result: IOssRes = {
         Bucket: ossBucket,
         Region: get(inputs, 'props.region'),
@@ -121,16 +120,18 @@ export default class OssComponent extends Base {
       if (isEmpty(customDomains)) {
         result.OssAddress = `https://oss.console.aliyun.com/bucket/${ossRegion}/${ossBucket}/object`;
       } else {
-        // attr bucket region customDomains
         const { domains: domainList, reportContent } = await bindDomain(inputs);
         // report oss response
         super.__report(reportContent);
         result.Domains = domainList;
       }
-      deployLoading.succeed('OSS website source deployed success');
+      const message = every(result.Domains, (child) => isEmpty(child))
+        ? 'oss deployed successful without Domain'
+        : 'oss deployed successful ';
+      logger.info(message);
       return result;
     } catch (e) {
-      deployLoading.fail('OSS website source deployed error');
+      logger.error('oss deployed aborted');
       return {
         errMesg: e,
       };

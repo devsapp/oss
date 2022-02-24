@@ -8,7 +8,7 @@ import {
   IOptimization,
   IRedirects,
 } from './interface';
-import { get } from 'lodash';
+import { get, isFunction } from 'lodash';
 import chillout from 'chillout';
 import logger from './logger';
 import { spinner } from '@serverless-devs/core';
@@ -221,3 +221,17 @@ export const waitUntil = async (
   });
   return result;
 };
+
+export function deepMap(target: Object, condition: String, callback: Function) {
+  if (Object.prototype.toString.call(target) !== '[object Object]') return;
+  for (const key in target) {
+    if (Object.prototype.hasOwnProperty.call(target, key)) {
+      if (key === condition && isFunction(callback)) {
+        callback(target);
+      }
+      if (Object.prototype.toString.call(target[key]) === '[object Object]') {
+        deepMap(target[key], condition, callback);
+      }
+    }
+  }
+}

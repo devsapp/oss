@@ -79,3 +79,9 @@ export interface IRedirects {
   source: string;
   destination: string;
 }
+
+export interface IResBucket {
+  remoteAddress: string;
+  remotePort?: string;
+  requestUrls?: string;
+}

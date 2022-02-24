@@ -8,8 +8,8 @@ services:
     access: wll
     props:
       region: ${vars.region}
-      bucket: wlltest-2022-${vars.region}-11 # auto string 自动
-      acl: public-read 
+      bucket: auto
+      acl: public-read
       codeUri: ./build
       subDir: wllAssignObject2022
       cors: [

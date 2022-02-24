@@ -39,10 +39,11 @@ Properties:
   bucket:
     Description: OSS Bucket
     Required: True
+    Default: auto  serverless-devs-${region}-${serviceName}-${uid}
     Type:
       - String
   acl:
-    Description: OSS bucket 权限 、 文件上传继承OSS bucket权限
+    Description: OSS bucket 权限 、 文件上传继承OSS bucket权限【如果设置绑定域名属性customDomains，OSS ACL 默认是public-read】
     Required: False
     Type:
       - Enum:

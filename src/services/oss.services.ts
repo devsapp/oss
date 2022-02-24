@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import OssClient from 'ali-oss';
-import { spinner, inquirer } from '@serverless-devs/core';
+import { spinner, inquirer, commandParse } from '@serverless-devs/core';
 import path from 'path';
 import { spawnSync } from 'child_process';
 import { logger } from '../common';
@@ -17,6 +17,9 @@ interface ISrc {
   buildCommand?: string;
   index?: string;
   error?: string;
+}
+export interface IHandleInputsRes {
+  [key: string]: any;
 }
 export interface IOssConfig {
   accessKeyId: string;
@@ -76,8 +79,9 @@ export async function bucketIsExisting(
   client: OssClient,
   bucket: string,
   ossAcl: ACLType = 'private',
-  assumeYes: Boolean,
+  argsData: IHandleInputsRes,
 ) {
+  const assumeYes: boolean = argsData.y || argsData.assumeYes || argsData['assume-yes'];
   try {
     await client.getBucketInfo(bucket);
     return true;
@@ -203,4 +207,14 @@ export async function bindDomain(inputs: InputProps) {
       content: result,
     },
   };
+}
+
+export function handleInputs(inputs: InputProps) {
+  const parsedArgs: { [key: string]: any } = commandParse(inputs, {
+    boolean: ['help', 'assume-yes'],
+    string: ['type'],
+    alias: { help: ['h', 'H'], 'assume-yes': ['y', 'Y'] },
+  });
+  const argsData: any = parsedArgs?.data || {};
+  return argsData;
 }
