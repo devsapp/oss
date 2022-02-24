@@ -56,9 +56,9 @@ export default class OssComponent extends Base {
       return;
     } else if (ossBucket === 'auto') {
       const serviceName = get(inputs, 'appName');
-      ossBucket = `serverless-devs-${region}-${serviceName}-${uid}-1`;
+      ossBucket = `serverless-devs-${ossRegion}-${serviceName}-${uid}`;
     }
-    const ossAcl = get(inputs, 'props.acl', 'private');
+    const ossAcl = !isEmpty(customDomains) ? 'public-read' : get(inputs, 'props.acl', 'private');
     reportComponent('oss', {
       uid,
       command: 'deploy',
@@ -120,7 +120,8 @@ export default class OssComponent extends Base {
       if (isEmpty(customDomains)) {
         result.OssAddress = `https://oss.console.aliyun.com/bucket/${ossRegion}/${ossBucket}/object`;
       } else {
-        const { domains: domainList, reportContent } = await bindDomain(inputs);
+        // 如果auto 修改 bucket
+        const { domains: domainList, reportContent } = await bindDomain(inputs, ossBucket);
         // report oss response
         super.__report(reportContent);
         result.Domains = domainList;

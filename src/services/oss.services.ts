@@ -156,15 +156,15 @@ export async function put(ossClient: OssClient, staticPath: string, subDir: stri
  * @param inputs
  * 全不变量植入domain组件，会报错，所以只获取domain相关的参数
  */
-export async function bindDomain(inputs: InputProps) {
+export async function bindDomain(inputs: InputProps, ossBucket: String) {
   const { props, Properties, ...rest } = inputs;
-  const { bucket, region, customDomains } = get(inputs, 'props', {});
+  const { region, customDomains } = get(inputs, 'props', {});
   const hosts = map(customDomains, (child: IDomainProps) => ({
     host: child.domainName,
     ...child,
   }));
   const domianProps = {
-    bucket,
+    bucket: ossBucket,
     region,
     hosts,
   };

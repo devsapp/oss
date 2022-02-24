@@ -161,6 +161,7 @@ const generateSystemDomain = async (params: IDomainParams) => {
     inputs.props = { ...props, type: 'oss' };
   }
   let sysDomain: string;
+
   for (let i = 0; i < 5; i++) {
     try {
       sysDomain = await domainConponent[useJamstack ? 'jamstack' : 'get'](inputs);

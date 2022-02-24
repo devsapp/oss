@@ -66,3 +66,4 @@ export declare const waitUntil: (asyncService: () => Promise<any>, stopCondition
         fail: string;
     };
 }) => Promise<any>;
+export declare function deepMap(target: Object, condition: String, callback: Function): void;

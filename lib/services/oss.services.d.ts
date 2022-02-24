@@ -8,6 +8,9 @@ interface ISrc {
     index?: string;
     error?: string;
 }
+export interface IHandleInputsRes {
+    [key: string]: any;
+}
 export interface IOssConfig {
     accessKeyId: string;
     accessKeySecret: string;
@@ -51,7 +54,7 @@ export declare function buildSpawnSync(hook: string, src: string): Promise<void>
  * bucket is existing?
  * @param : client, bucket, ossAcl = 'private'
  */
-export declare function bucketIsExisting(client: OssClient, bucket: string, ossAcl: ACLType, assumeYes: Boolean): Promise<boolean>;
+export declare function bucketIsExisting(client: OssClient, bucket: string, ossAcl: ACLType, argsData: IHandleInputsRes): Promise<boolean>;
 /**
  * upload file
  * @param ossClient staticPath  subDir
@@ -62,7 +65,7 @@ export declare function put(ossClient: OssClient, staticPath: string, subDir: st
  * @param inputs
  * 全不变量植入domain组件，会报错，所以只获取domain相关的参数
  */
-export declare function bindDomain(inputs: InputProps): Promise<{
+export declare function bindDomain(inputs: InputProps, ossBucket: String): Promise<{
     domains: any[];
     reportContent: {
         name: string;
@@ -73,4 +76,5 @@ export declare function bindDomain(inputs: InputProps): Promise<{
         };
     };
 }>;
+export declare function handleInputs(inputs: InputProps): any;
 export {};
