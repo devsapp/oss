@@ -163,7 +163,7 @@ oss:
         const warnMsg = `
 ${colors.yellow('tips for domain')}
 ${colors.yellow('===============================')}
-* ${colors.yellow('正在为您绑定域名，预计花费1分钟；')}
+${colors.yellow('* 正在为您绑定域名，预计花费1分钟')}
 `;
         console.log(warnMsg);
       }

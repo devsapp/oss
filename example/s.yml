@@ -8,7 +8,7 @@ services:
     access: wll
     props:
       region: ${vars.region}
-      bucket: wll-2020-oss11112223
+      bucket: wll-2020-oss1111222311
       acl: public-read
       codeUri: ./build
       cors: [
