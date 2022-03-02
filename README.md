@@ -46,8 +46,7 @@ services:
       website: # OSS 静态网站配置
         index: index.html # 默认首页
         error: 404.html # 默认 404 页
-        subDir: # 子目录首页
-          type: redirect # 文件 404 规则
+        subDirType: redirect # 子目录首页 404 规则
       customDomains: # OSS 绑定域名
         - domainName: auto
           protocol: HTTP
