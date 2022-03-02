@@ -27,6 +27,11 @@ export interface IOssStatic {
     error?: string;
     subDir?: ISubDir;
 }
+export interface IOssWebsite {
+    index: string;
+    error?: string;
+    subDirType?: string;
+}
 export interface IOssRes {
     Bucket: string;
     Region: string;

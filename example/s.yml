@@ -5,10 +5,10 @@ vars:
 services:
   oss:
     component: ${path(..)} 
-    access: default
+    access: wll
     props:
       region: ${vars.region}
-      bucket: auto
+      bucket: wll-2020-oss11112223
       acl: public-read
       codeUri: ./build
       cors: [
@@ -28,9 +28,7 @@ services:
       website:
         index: index.html
         error: 404.html
-        subDir: {
-          type: redirect
-        }
+        subDirType: redirect
       customDomains: # customDomains
         - domainName: auto 
           https:

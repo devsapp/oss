@@ -184,7 +184,7 @@ const generateSystemDomain = async (params: IDomainParams) => {
     await setCdnDomainStagingConfig(cdnClient, { domain: sysDomain, fcDomain: props.customDomain });
   }
 
-  logger.log(`\ndomainName: ${colors.cyan.underline(`http://${sysDomain}`)}`);
+  // logger.log(`\ndomainName: ${colors.cyan.underline(`http://${sysDomain}`)}`);
   return sysDomain;
 };
 

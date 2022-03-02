@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-param-reassign */
 /* eslint-disable require-atomic-updates */
 /* eslint-disable @typescript-eslint/dot-notation */
@@ -8,7 +9,7 @@ import * as cores from '@serverless-devs/core';
 import OssClient from 'ali-oss';
 import {
   IOssConfig,
-  IOssStatic,
+  IOssWebsite,
   IwebsiteConfig,
   IOssRes,
   bucketIsExisting,
@@ -21,10 +22,11 @@ import { logger } from './common';
 import Base from './common/base';
 import { InputProps } from './common/entity';
 import { DEPLOY_HELP_INFO } from './common/contants';
-import { every, get, isEmpty } from 'lodash';
+import { each, every, get, isEmpty } from 'lodash';
 import fs from 'fs-extra';
+import dns from 'dns';
 
-const { reportComponent, getCredential, help: coreHelp } = cores;
+const { reportComponent, getCredential, help: coreHelp, colors } = cores;
 export default class OssComponent extends Base {
   /**
    * deploy
@@ -102,10 +104,10 @@ export default class OssComponent extends Base {
       const ossSubDir = get(inputs, 'props.subDir');
       await put(ossClient, ossSrc, ossSubDir);
       // update website
-      const ossStatic: IOssStatic = get(inputs, 'props.website', {});
-      const { index = '', error = '', subDir = '' } = ossStatic;
+      const website: IOssWebsite = get(inputs, 'props.website', {});
+      const { index = '', error = '', subDirType = '' } = website;
       const websiteConfig: IwebsiteConfig = { index, error };
-      if (subDir && subDir.type) {
+      if (subDirType) {
         // supportSubDir ?
         websiteConfig.supportSubDir = true;
         const typeMap = {
@@ -113,8 +115,7 @@ export default class OssComponent extends Base {
           index: 2,
           redirect: 0,
         };
-        const subDirType = get(typeMap, subDir.type, 1);
-        websiteConfig.type = subDirType;
+        websiteConfig.type = typeMap[subDirType] || 0;
       }
       await ossClient.putBucketWebsite(ossBucket, websiteConfig);
       // bindDomain
@@ -135,7 +136,39 @@ export default class OssComponent extends Base {
         ? 'oss deployed successful without Domain'
         : 'oss deployed successful ';
       logger.info(message);
-      return result;
+      let dnsRes = { address: '' };
+      try {
+        if (result.Domains.length > 0) {
+          dnsRes = await dns.promises.lookup(result.Domains[0]);
+        }
+        // eslint-disable-next-line no-empty
+      } catch (e) {}
+      // process.on('exit', () => {});
+      let domainStr = '';
+      each(result.Domains, (child) => {
+        const childLabel = `http://${child}`;
+        domainStr += `  -
+        domain: ${colors.cyan.underline(childLabel)}
+        `;
+      });
+      const finalMsg = `
+oss:
+  bucket: ${colors.cyan(ossBucket)}
+  region: ${colors.cyan(get(inputs, 'props.region'))}
+  url:
+    custom_domain: 
+    ${domainStr}
+`;
+      if (!dnsRes.address) {
+        const warnMsg = `
+${colors.yellow('tips for domain')}
+${colors.yellow('===============================')}
+${colors.yellow('正在为您绑定域名，预计花费1分钟；')}
+`;
+        console.log(warnMsg);
+      }
+      console.log(finalMsg);
+      return;
     } catch (e) {
       logger.error('oss deployed aborted');
       return {
