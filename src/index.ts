@@ -55,8 +55,13 @@ export default class OssComponent extends Base {
       logger.error('bucket is required For oss');
       return;
     } else if (ossBucket === 'auto') {
-      const serviceName = get(inputs, 'appName');
-      ossBucket = `serverless-devs-${ossRegion}-${serviceName}-${uid}`;
+      const projectName = get(inputs, 'project.projectName');
+      logger.debug(`[projectName] inputs params: ${projectName}`);
+      logger.debug(`[appName] inputs params: ${get(inputs, 'appName')}`);
+      ossBucket = `serverless-devs-${region}-${projectName}-${uid}`;
+      argsData.assumeYes = true;
+      argsData.y = true;
+      argsData['assume-yes'] = true;
     }
     const ossAcl = !isEmpty(customDomains) ? 'public-read' : get(inputs, 'props.acl', 'private');
     reportComponent('oss', {

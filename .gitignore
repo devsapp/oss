@@ -5,6 +5,8 @@ node_modules
 /example/.s
 .s.lock
 
+wllReadMe.md
+
 # Logs
 logs
 *.log

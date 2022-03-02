@@ -9,10 +9,8 @@ services:
     props:
       region: ${vars.region}
       bucket: auto
-      # wlltest-2022-cn-hangzhou-13
       acl: private
       codeUri: ./build
-      subDir: wllAssignObject2022
       cors: [
         { 
           allowedOrigin: ['https://oss.console.aliyun.com'],

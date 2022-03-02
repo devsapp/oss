@@ -112,7 +112,7 @@ export async function bucketIsExisting(
         logger.log(`The bucket ${bucket} is inexistent`, 'red');
       }
     } else {
-      logger.log('GetBucketInfo Server is Error', 'red');
+      throw new Error(error);
     }
     return false;
   }
@@ -169,7 +169,12 @@ export async function bindDomain(inputs: InputProps, ossBucket: String) {
     hosts,
   };
   const domainParms = { props: domianProps, Properties: domianProps, ...rest };
-  const domains = await domain(domainParms);
+  let domains = [];
+  try {
+    domains = await domain(domainParms);
+  } catch (error) {
+    throw new Error(error);
+  }
 
   const report_content = {
     oss: [
@@ -213,7 +218,7 @@ export function handleInputs(inputs: InputProps) {
   const parsedArgs: { [key: string]: any } = commandParse(inputs, {
     boolean: ['help', 'assume-yes'],
     string: ['type'],
-    alias: { help: ['h', 'H'], 'assume-yes': ['y', 'Y'] },
+    alias: { help: ['h'], 'assume-yes': ['y'] },
   });
   const argsData: any = parsedArgs?.data || {};
   return argsData;
