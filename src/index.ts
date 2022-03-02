@@ -153,8 +153,8 @@ export default class OssComponent extends Base {
       });
       const finalMsg = `
 oss:
-  bucket: ${colors.cyan(ossBucket)}
-  region: ${colors.cyan(get(inputs, 'props.region'))}
+  bucket: ${ossBucket}
+  region: ${get(inputs, 'props.region')}
   url:
     custom_domain: 
     ${domainStr}
