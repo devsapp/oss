@@ -5,11 +5,11 @@ vars:
 services:
   oss:
     component: ${path(..)} 
-    access: wll
+    access: default
     props:
       region: ${vars.region}
       bucket: auto
-      acl: private
+      acl: public-read
       codeUri: ./build
       cors: [
         { 
@@ -31,7 +31,6 @@ services:
         subDir: {
           type: redirect
         }
-      cdn:
       customDomains: # customDomains
         - domainName: auto 
           https:

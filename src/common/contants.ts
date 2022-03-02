@@ -54,12 +54,12 @@ export const DEPLOY_HELP_INFO = [
     header: 'Options',
     optionList: [
       {
-        name: 'y, -y, -Y',
+        name: 'y, -y',
         description: 'Assume that the answer to any question which would be asked is yes.',
         type: Boolean,
       },
       {
-        name: 'h, -h, -H',
+        name: 'h, -h',
         description: 'Display help for command',
         type: Boolean,
       },

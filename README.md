@@ -57,7 +57,7 @@ $ s deploy
 
 ### 4. 配置
 
-静态网站组件支持 0 配置部署，也就是可以直接通过配置文件中的默认值进行部署。但你依然可以修改更多可选配置来进一步开发该静态网站项目。
+静态网站组件支持 0 配置部署，也就是可以直接通过配置文件中的默认值进行部署。但你依然可以修改更多可选配置来进一步开发该静态网站项目。 
 
 以下是 OSS 组件的 `s.yml`部分配置说明：
 
@@ -77,7 +77,6 @@ services:
       bucket: auto # OSS bucket 自动生成
       acl: public-read # 权限
       codeUri: ./build # 指定本地要上传目录文件地址
-      subDir: wllAssignObject # 指定OSS Bucket 文件上传目录
       cors: # OSS 设置跨域资源共享规则
         [
           {
@@ -88,27 +87,24 @@ services:
         ]
       referer: # OSS 设置Referer防盗链
         { allowEmpty: true, referers: ['https://edasnext.console.aliyun.com'] }
-      website: # OSS 静态网站配置
-      customDomains: # OSS 绑定域名，绑定域名意味着权限是 ACL 权限：【public-read】
+      website:  # OSS 静态网站配置
+        index: index.html
+        error: 404.html
+        subDir: {
+          type: redirect
+        }
+      customDomains:  # OSS 绑定域名，绑定域名意味着权限是 ACL 权限：【public-read】
+        - domainName: auto 
+          https:
+            certInfo:
+              certType: free
+              switch: 'off'
 ```
 
 当你根据该配置文件更新配置字段后，再次运行 `s deploy` 
 
 
 
-## 近期计划
-目前只支持系统自动生成域名，新增功能及优化：
-
-- [ ] **绑定自定义域名** - hosts的host属性目前只支持auto，系统生成域名
-- [ ] **CDN组件** - 允许用户配置CDN相关属性，同步CDN控制台
-- [x] **bucket** - bucket 名称如果是auto，自动生成一个bucket名称
-- [ ] **资源对比** - 本地资源与线上diff
-- [x] **OSS ACL权限** - 如果设置绑定域名，OSS ACL 默认是public-read，
-- [ ] **函数** - 指令参数 参考：s deploy -h
-- [ ] **移除** - s remove * 移除绑定的资源(*)、配置； 参考：s remove -h
-- [x] **支持CICD -y** - s deploy -y 默认自动创建bucket; s deploy -y
-- [x] **支持 -h** - 提示信息 s deploy -h、s deploy -help
-- [x] **【优化】** - get cdn name 和 uploading 文件的提示信息 重叠问题
 
 ## 账号配置
 
