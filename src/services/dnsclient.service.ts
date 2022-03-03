@@ -23,7 +23,7 @@ export interface IAddDomainRecord {
 
 export default class Client {
   /**
-   * 使用AK&SK初始化账号Client
+   * AK&SK Client
    * @param accessKeyId
    * @param accessKeySecret
    * @return Client
@@ -35,7 +35,6 @@ export default class Client {
       accessKeyId,
       accessKeySecret,
     });
-    // 访问的域名
     config.endpoint = 'dns.aliyuncs.com';
     return new Alidns20150109(config);
   }
@@ -48,7 +47,9 @@ export default class Client {
       const result = await client.addDomainRecord(addDomainRecordRequest);
       return result;
     } catch (error) {
-      logger.warn(`使用阿里DNS解析失败, 请手动配置CNAME${addDomainRecordParams.value}`);
+      logger.warn(
+        `Failed to resolve using Ali DNS, please configure CNAME manually ${addDomainRecordParams.value}`,
+      );
     }
   }
 
@@ -59,15 +60,4 @@ export default class Client {
     const result = await client.describeDomainInfo(describeDomainInfoRequest);
     return result;
   }
-
-  // static async removeCDNDomain(client, domain: string): Promise<void> {
-  //   const deleteDomainRequest = new $Alidns20150109.DeleteDomainRequest({ domainName: domain });
-  //   // 复制代码运行请自行打印 API 的返回值
-  //   try {
-  //     await client.deleteDomain(deleteDomainRequest);
-  //   } catch (error) {
-  //     console.log(error);
-  //     // 删除域名不影响正常流程
-  //   }
-  // }
 }

@@ -68,7 +68,7 @@ export declare function put(ossClient: OssClient, staticPath: string, subDir: st
 /**
  * domain
  * @param inputs
- * 全不变量植入domain组件，会报错，所以只获取domain相关的参数
+ * get  domain params
  */
 export declare function bindDomain(inputs: InputProps, ossBucket: String): Promise<{
     domains: any[];

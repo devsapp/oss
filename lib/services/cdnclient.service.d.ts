@@ -2,7 +2,7 @@ import Cdn20180510 from '@alicloud/cdn20180510';
 import { ICredentials, ICdnSource, IReferer, IHttps, TForceHttps, THttp2, IIpFilter, IOptimization, IRedirects } from '../common';
 export default class Client {
     /**
-     * 使用AK&SK初始化账号Client
+     * AK&SK Client
      * @param accessKeyId
      * @param accessKeySecret
      * @return Client
@@ -10,7 +10,7 @@ export default class Client {
      */
     static createClient(credentials: ICredentials): Cdn20180510;
     /**
-     * 设置edge script灰度配置
+     * edge script grey config
      * @param accessKeyId
      * @param accessKeySecret
      */
@@ -19,22 +19,22 @@ export default class Client {
         rule: string;
     }): Promise<void>;
     /**
-     * @description 获取灰度环境配置信息
+     * @description get grey env info
      * @param credentials
      */
     static describeCdnDomainStagingConfig(client: any, domain: string): Promise<any>;
     /**
-     * 将edge script灰度配置发布到线上环境
+     * make edge script grey config to prod
      * @param credentials
      */
     static publishEsStagingConfigToProduction(client: any, domain: string): Promise<void>;
     /**
-     * @description 获取CDN域名的详细信息
+     * @description get cdn domain info
      * @param credentials
      */
     static describeCdnDomainDetail(client: any, domain: string): Promise<any>;
     /**
-     * @description 域名归属校验
+     * @description
      * @param client
      * @param param1
      */
@@ -43,13 +43,13 @@ export default class Client {
         verifyType?: string;
     }): Promise<any>;
     /**
-     * 删除域名
+     *
      * @param client
      * @param domain
      */
     static deleteCdnDomain(client: any, domain: string, isThrowError: boolean): Promise<void>;
     /**
-     * @description 添加CDN域名
+     * @description
      * @param client
      * @param param1
      */
@@ -58,7 +58,7 @@ export default class Client {
         sources: ICdnSource;
     }): Promise<void>;
     /**
-     * @description 修改添加CDN域名
+     * @description
      * @param client
      * @param param1
      */
@@ -67,7 +67,7 @@ export default class Client {
         sources?: ICdnSource;
     }): Promise<void>;
     /**
-     * @description 增加HTTP证书
+     * @description
      * @param client
      * @param param1
      */
@@ -80,7 +80,7 @@ export default class Client {
         http2: THttp2;
     }): Promise<void>;
     /**
-     * @description 删除加速域名的配置
+     * @description
      * @param client
      * @param param1
      */
@@ -89,7 +89,7 @@ export default class Client {
         configId: string;
     }): Promise<any>;
     /**
-     * @description 获取加速域名的配置信息。
+     * @description
      * @param client
      * @param param1
      */
@@ -98,7 +98,7 @@ export default class Client {
         functionNames: string;
     }): Promise<any>;
     /**
-     * @description 获取用户的加速域名信息
+     * @description
      * @param client
      * @param param1
      */
@@ -116,7 +116,7 @@ export default class Client {
         forceHttps: TForceHttps;
     }): Promise<void>;
     /**
-     * @description Referer防盗链
+     * @description
      * @param client
      * @param param1
      */
@@ -125,7 +125,7 @@ export default class Client {
         referer: IReferer;
     }): Promise<any>;
     /**
-     * @description IP黑/白名单
+     * @description
      * @param client
      * @param param1
      */
@@ -134,7 +134,7 @@ export default class Client {
         ipFilter: IIpFilter;
     }): Promise<any>;
     /**
-     * @description UA黑/白名单
+     * @description
      * @param client
      * @param param1
      */
@@ -143,7 +143,7 @@ export default class Client {
         uaFilter: IIpFilter;
     }): Promise<any>;
     /**
-     * @description 性能优化
+     * @description
      * @param client
      * @param param1
      */
@@ -152,7 +152,7 @@ export default class Client {
         optimization: IOptimization;
     }): Promise<void>;
     /**
-     * @description 重定向
+     * @description
      * @param client
      * @param param1
      */

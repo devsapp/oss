@@ -26,7 +26,7 @@ import { get } from 'lodash';
 
 export default class Client {
   /**
-   * 使用AK&SK初始化账号Client
+   * AK&SK Client
    * @param accessKeyId
    * @param accessKeySecret
    * @return Client
@@ -35,18 +35,15 @@ export default class Client {
   static createClient(credentials: ICredentials): Cdn20180510 {
     const { accessKeyId, accessKeySecret } = credentials;
     const config = new $OpenApi.Config({
-      // 您的AccessKey ID
       accessKeyId,
-      // 您的AccessKey Secret
       accessKeySecret,
     });
-    // 访问的域名
     config.endpoint = 'cdn.aliyuncs.com';
     return new Cdn20180510(config);
   }
 
   /**
-   * 设置edge script灰度配置
+   * edge script grey config
    * @param accessKeyId
    * @param accessKeySecret
    */
@@ -72,11 +69,11 @@ export default class Client {
         },
       ]),
     });
-    // 复制代码运行请自行打印 API 的返回值
+
     await client.setCdnDomainStagingConfig(setCdnDomainStagingConfigRequest);
   }
   /**
-   * @description 获取灰度环境配置信息
+   * @description get grey env info
    * @param credentials
    */
   static async describeCdnDomainStagingConfig(client, domain: string): Promise<any> {
@@ -85,11 +82,10 @@ export default class Client {
         domainName: domain,
         functionNames: 'edge_function',
       });
-    // 复制代码运行请自行打印 API 的返回值
     return await client.describeCdnDomainStagingConfig(describeCdnDomainStagingConfigRequest);
   }
   /**
-   * 将edge script灰度配置发布到线上环境
+   * make edge script grey config to prod
    * @param credentials
    */
   static async publishEsStagingConfigToProduction(client, domain: string): Promise<void> {
@@ -98,12 +94,11 @@ export default class Client {
         domainName: domain,
         functionName: 'edge_function',
       });
-    // 复制代码运行请自行打印 API 的返回值
     await client.publishStagingConfigToProduction(publishStagingConfigToProductionRequest);
   }
 
   /**
-   * @description 获取CDN域名的详细信息
+   * @description get cdn domain info
    * @param credentials
    */
   static async describeCdnDomainDetail(client, domain: string): Promise<any> {
@@ -136,7 +131,7 @@ export default class Client {
       const messageCode = message.split(':')[0];
       if (messageCode === 'CdnServiceNotFound') {
         throw new Error(
-          '您的帐户尚未开通CDN服务，请前往 https://common-buy.aliyun.com/?commodityCode=cdn#/open 页面进行开通',
+          'Your account has not activated the CDN service, please go to https://common-buy.aliyun.com/?commodityCode=cdn#/open the page to activate',
         );
       }
       return null;
@@ -144,7 +139,7 @@ export default class Client {
   }
 
   /**
-   * @description 域名归属校验
+   * @description
    * @param client
    * @param param1
    */
@@ -166,15 +161,15 @@ export default class Client {
       const result = await client.describeVerifyContent(describeVerifyContentRequest);
       const verifyContent = get(result, 'body.content');
       throw new Error(
-        `2020年6月12日起，当您首次将新域名添加至阿里云CDN时，需按要求做域名归属权验证，当您按要求配置DNS解析或文件验证后，才能正常调用AddCdnDomain接口添加域名。 域名归属权验证请参见https://help.aliyun.com/document_detail/169377.html
-        请前往域名DNS服务商配置该TXT记录：记录类型:TXT，主机记录:verification，记录值:${verifyContent}
+        `From June 12, 2020, when you add a new domain name to Alibaba Cloud CDN for the first time, you need to verify the domain name ownership as required. After you configure DNS resolution or file verification as required, you can normally call the AddCdnDomain interface to add a domain name. For domain name attribution verification, see https://help.aliyun.com/document_detail/169377.html
+        Please go to the domain name DNS service provider to configure the TXT record: record type: TXT, host record: verification, record value: ${verifyContent}
         `,
       );
     }
   }
 
   /**
-   * 删除域名
+   *
    * @param client
    * @param domain
    */
@@ -194,7 +189,7 @@ export default class Client {
   }
 
   /**
-   * @description 添加CDN域名
+   * @description
    * @param client
    * @param param1
    */
@@ -205,7 +200,7 @@ export default class Client {
     // 添加CDN
     const addCdnDomainRequest = new $Cdn20180510.AddCdnDomainRequest({
       scope: 'global',
-      cdnType: 'web', // 图片小文件
+      cdnType: 'web',
       domainName: domain,
       sources: JSON.stringify([].concat(sources)),
     });
@@ -219,7 +214,7 @@ export default class Client {
   }
 
   /**
-   * @description 修改添加CDN域名
+   * @description
    * @param client
    * @param param1
    */
@@ -242,7 +237,7 @@ export default class Client {
   }
 
   /**
-   * @description 增加HTTP证书
+   * @description
    * @param client
    * @param param1
    */
@@ -262,7 +257,10 @@ export default class Client {
       forceHttps: get(https, 'protocol', 'default'),
     });
     if (get(https, 'certInfo.switch') === 'off' && https.http2 === 'on') {
-      logger.log('HTTP/2是最新的HTTP协议，开启前您需要先配置HTTPS证书', 'red');
+      logger.log(
+        'HTTP/2 is the latest HTTP protocol, you need to configure the HTTPS certificate before enabling it',
+        'red',
+      );
     }
     if (get(https, 'certInfo.switch') === 'on') {
       await Client.setCdnDomainHttp2(client, { domain, http2: get(https, 'http2', 'off') });
@@ -286,7 +284,7 @@ export default class Client {
   }
 
   /**
-   * @description 删除加速域名的配置
+   * @description
    * @param client
    * @param param1
    */
@@ -302,7 +300,7 @@ export default class Client {
   }
 
   /**
-   * @description 获取加速域名的配置信息。
+   * @description
    * @param client
    * @param param1
    */
@@ -319,7 +317,7 @@ export default class Client {
   }
 
   /**
-   * @description 获取用户的加速域名信息
+   * @description
    * @param client
    * @param param1
    */
@@ -352,16 +350,11 @@ export default class Client {
       (item) =>
         item.functionName === ForceHttpsEnum.http || item.functionName === ForceHttpsEnum.https,
     );
-    // 存在则设置过
     if (forceHttpsOptioned) {
-      // 当前状态和设置的值相同，直接返回
       if (forceHttpsOptioned.functionName === ForceHttpsEnum[forceHttps]) return;
-      // 不相同，则需要先删除当前状态
       await Client.DeleteSpecificConfig(client, { domain, configId: forceHttpsOptioned.configId });
     }
-    // 默认default，不需要设置
     if (forceHttps === 'default') return;
-    // 不存在则直接设置
     const cdnDomainStagingConfigRequest = new $Cdn20180510.BatchSetCdnDomainConfigRequest({
       domainNames: domain,
       functions: JSON.stringify([
@@ -375,7 +368,7 @@ export default class Client {
   }
 
   /**
-   * @description Referer防盗链
+   * @description
    * @param client
    * @param param1
    */
@@ -391,17 +384,13 @@ export default class Client {
       (item) =>
         item.functionName === RefererEnum.whitelist || item.functionName === RefererEnum.blacklist,
     );
-    // 开启
     if (referer.switch === 'on') {
-      // 存在则设置过
       if (refererOptioned) {
-        // 当前状态和设置的值不相同，则需要先删除
         if (referer.type !== refererOptioned.functionName) {
           await Client.DeleteSpecificConfig(client, { domain, configId: refererOptioned.configId });
         }
       }
     } else if (refererOptioned) {
-      // 未开启，且设置过 则删除
       return await Client.DeleteSpecificConfig(client, {
         domain,
         configId: refererOptioned.configId,
@@ -416,7 +405,7 @@ export default class Client {
   }
 
   /**
-   * @description IP黑/白名单
+   * @description
    * @param client
    * @param param1
    */
@@ -433,11 +422,8 @@ export default class Client {
         item.functionName === IpFilterEnum.whitelist ||
         item.functionName === IpFilterEnum.blacklist,
     );
-    // 开启
     if (ipFilter.switch === 'on') {
-      // 存在则设置过
       if (ipFilterOptioned) {
-        // 当前状态和设置的值不相同，则需要先删除
         if (ipFilter.type !== ipFilterOptioned.functionName) {
           await Client.DeleteSpecificConfig(client, {
             domain,
@@ -446,7 +432,6 @@ export default class Client {
         }
       }
     } else if (ipFilterOptioned) {
-      // 未开启，且设置过 则删除
       return await Client.DeleteSpecificConfig(client, {
         domain,
         configId: ipFilterOptioned.configId,
@@ -460,7 +445,7 @@ export default class Client {
   }
 
   /**
-   * @description UA黑/白名单
+   * @description
    * @param client
    * @param param1
    */
@@ -473,11 +458,8 @@ export default class Client {
       functionNames: 'ali_ua',
     });
     const uaFilterOptioned = cdnDomainConfigs.find((item) => item.functionName === 'ali_ua');
-    // 开启
     if (uaFilter.switch === 'on') {
-      // 存在则设置过
       if (uaFilterOptioned) {
-        // 当前状态和设置的值不相同，则需要先删除
         if (uaFilter.type !== uaFilterOptioned.functionName) {
           await Client.DeleteSpecificConfig(client, {
             domain,
@@ -486,7 +468,6 @@ export default class Client {
         }
       }
     } else if (uaFilterOptioned) {
-      // 未开启，且设置过 则删除
       return await Client.DeleteSpecificConfig(client, {
         domain,
         configId: uaFilterOptioned.configId,
@@ -500,7 +481,7 @@ export default class Client {
   }
 
   /**
-   * @description 性能优化
+   * @description
    * @param client
    * @param param1
    */
@@ -516,7 +497,7 @@ export default class Client {
   }
 
   /**
-   * @description 重定向
+   * @description
    * @param client
    * @param param1
    */

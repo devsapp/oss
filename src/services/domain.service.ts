@@ -6,7 +6,7 @@ import { logger, ICdnSource, IDomainParams, parseDomain, waitUntil, sleep } from
 import { get, cloneDeep, isEmpty } from 'lodash';
 
 /**
- * OSS Bucket域名
+ * OSS Bucket Domain
  * @param region
  * @param bucket
  * @returns
@@ -29,14 +29,14 @@ const setDomainAdvancedConfig = async (cdnClient, { domain, hostObj }) => {
       const message = get(error, 'message', '');
       const messageCode = message.split(':')[0];
       logger.error(
-        `https配置失败，请前往控制台页面 ${colors.cyan.underline(
+        `Https configuration fails, go to the console page ${colors.cyan.underline(
           `https://cdn.console.aliyun.com/domain/detail/${domain}/https`,
-        )} 进行手动操作，函数名：setDomainServerCertificate，错误码：${messageCode}`,
+        )} and operate manually, Funcname: setDomainServerCertificate, Error code: ${messageCode}`,
       );
       logger.debug(error);
     }
   }
-  // Referer 防盗链
+  // Referer
   const referer = get(access, 'referer');
   if (referer) {
     try {
@@ -45,17 +45,17 @@ const setDomainAdvancedConfig = async (cdnClient, { domain, hostObj }) => {
       const message = get(error, 'message', '');
       const messageCode = message.split(':')[0];
       logger.error(
-        `Referer防盗链配置失败，请前往控制台页面 ${colors.cyan.underline(
+        `Referer configuration fails, go to the console page ${colors.cyan.underline(
           `https://cdn.console.aliyun.com/domain/detail/${domain}/access`,
         )} tab ${colors.green(
-          'Referer防盗链',
-        )} 界面进行手动操作，函数名：setCdnDomainReferer，错误码：${messageCode}`,
+          'Referer',
+        )} and operate manually, Funcname: setCdnDomainReferer, Error code: ${messageCode}`,
       );
       logger.debug(error);
     }
   }
 
-  // IP黑/白名单
+  // IP
   const ipFilter = get(access, 'ipFilter');
   if (ipFilter) {
     try {
@@ -64,17 +64,17 @@ const setDomainAdvancedConfig = async (cdnClient, { domain, hostObj }) => {
       const message = get(error, 'message', '');
       const messageCode = message.split(':')[0];
       logger.error(
-        `IP黑/白名单配置失败，请前往控制台页面 ${colors.cyan.underline(
+        `IP black/whitelist configuration failed, please go to the console page ${colors.cyan.underline(
           `https://cdn.console.aliyun.com/domain/detail/${domain}/access`,
         )} tab ${colors.green(
-          'IP黑/白名单',
-        )} 界面进行手动操作，函数名：setCdnDomainIpFilter，错误码：${messageCode}`,
+          'IP black/whitelist configuration',
+        )} and operate manually, Funcname: setCdnDomainIpFilter, Error code: ${messageCode}`,
       );
       logger.debug(error);
     }
   }
 
-  // UA黑/白名单
+  // UA
   const uaFilter = get(access, 'uaFilter');
   if (uaFilter) {
     try {
@@ -83,17 +83,17 @@ const setDomainAdvancedConfig = async (cdnClient, { domain, hostObj }) => {
       const message = get(error, 'message', '');
       const messageCode = message.split(':')[0];
       logger.error(
-        `UA黑/白名单配置失败，请前往控制台页面 ${colors.cyan.underline(
+        `UA black/whitelist configuration failed, please go to the console page ${colors.cyan.underline(
           `https://cdn.console.aliyun.com/domain/detail/${domain}/access`,
         )} tab ${colors.green(
-          'UA黑/白名单',
-        )} 界面进行手动操作，函数名：setCdnDomainUaFilter，错误码：${messageCode}`,
+          'UA black/whitelist configuration',
+        )} and operate manually, Funcname: setCdnDomainUaFilter, Error code: ${messageCode}`,
       );
       logger.debug(error);
     }
   }
 
-  // 性能优化
+  //  performance optimization
   if (optimization) {
     try {
       await CdnService.setCdnDomainOptimization(cdnClient, { domain, optimization });
@@ -101,9 +101,9 @@ const setDomainAdvancedConfig = async (cdnClient, { domain, hostObj }) => {
       const message = get(error, 'message', '');
       const messageCode = message.split(':')[0];
       logger.error(
-        `性能优化配置失败，请前往控制台页面 ${colors.cyan.underline(
+        `The performance optimization configuration failed, please go to the console page ${colors.cyan.underline(
           `https://cdn.console.aliyun.com/domain/detail/${domain}/perform`,
-        )} 进行手动操作，函数名：setCdnDomainOptimization，错误码：${messageCode}`,
+        )} and operate manually, Funcname: setCdnDomainOptimization, Error code: ${messageCode}`,
       );
       logger.debug(error);
     }
@@ -117,11 +117,11 @@ const setDomainAdvancedConfig = async (cdnClient, { domain, hostObj }) => {
       const message = get(error, 'message', '');
       const messageCode = message.split(':')[0];
       logger.error(
-        `重定向配置失败，请前往控制台页面 ${colors.cyan.underline(
+        `Redirection configuration failed, please go to the console page ${colors.cyan.underline(
           `https://cdn.console.aliyun.com/domain/detail/${domain}/cache`,
         )} tab ${colors.green(
-          '重写',
-        )} 界面进行手动操作，函数名：setCdnDomainRedirects，错误码：${messageCode}`,
+          'rewrite interface',
+        )} and operate manually, Funcname: setCdnDomainRedirects, Error code: ${messageCode}`,
       );
       logger.debug(error);
     }
@@ -173,13 +173,13 @@ const generateSystemDomain = async (params: IDomainParams) => {
   }
 
   if (isEmpty(sysDomain)) {
-    return logger.warn('域名申请失败，请稍后重试。');
+    return logger.warn('Domain name application failed, please try again later.');
   }
 
   logger.debug(`Test Domain: ${sysDomain}`);
   await setDomainAdvancedConfig(cdnClient, { domain: sysDomain, hostObj });
 
-  // 添加边缘脚本
+  // add edge script
   if (useJamstack) {
     await setCdnDomainStagingConfig(cdnClient, { domain: sysDomain, fcDomain: props.customDomain });
   }
@@ -188,7 +188,7 @@ const generateSystemDomain = async (params: IDomainParams) => {
   return sysDomain;
 };
 
-// 绑定到自定义域名
+// custom domain name
 const generateDomain = async (params: IDomainParams) => {
   const { credentials, hostObj, sources } = params;
   const { host: domain } = hostObj;
@@ -197,12 +197,13 @@ const generateDomain = async (params: IDomainParams) => {
   const { topDomain, rrDomainName } = parseDomain(domain);
 
   let domainDetailMode = await CdnService.describeCdnDomainDetail(cdnClient, domain);
-  logger.debug(`查询绑定的域名信息:${JSON.stringify(domainDetailMode, null, 2)}`);
+  logger.debug(
+    `Query the bound domain name information: ${JSON.stringify(domainDetailMode, null, 2)}`,
+  );
 
-  // 没有域名则添加域名
   if (!domainDetailMode) {
-    logger.debug(`首次绑定自定义域名:${domain}`);
-    // 第一次添加会出强制校验
+    logger.debug(`Binding a custom domain name for the first time: ${domain}`);
+
     await CdnService.verifyDomainOwner(cdnClient, { domain });
     await CdnService.addCDNDomain(cdnClient, {
       domain,
@@ -216,11 +217,17 @@ const generateDomain = async (params: IDomainParams) => {
       (result) => get(result, 'cname'),
       {
         timeInterval: 3000,
-        timeoutMsg: 'DNS 首次配置生效时间等待超时',
+        timeoutMsg: 'Timeout waiting for the first DNS configuration to take effect',
       },
     );
 
-    logger.debug(`首次绑定的域名信息:${JSON.stringify(domainDetailMode, null, 2)}`);
+    logger.debug(
+      `Domain name information bound for the first time: ${JSON.stringify(
+        domainDetailMode,
+        null,
+        2,
+      )}`,
+    );
     await DnsService.addDomainRecord(dnsClient, {
       domainName: topDomain,
       RR: rrDomainName,
@@ -228,7 +235,7 @@ const generateDomain = async (params: IDomainParams) => {
       value: domainDetailMode.cname,
     });
   } else {
-    logger.debug(`绑定自定义域名:${domain}`);
+    logger.debug(`Bind a custom domain name: ${domain}`);
     CdnService.modifyCdnDomain(cdnClient, { domain, sources });
   }
   await setDomainAdvancedConfig(cdnClient, { domain, hostObj });
@@ -257,7 +264,10 @@ export default async (orinalInputs) => {
       }),
     );
   } else {
-    logger.log('如果需要系统帮你生成一个域名，可配置host为 auto ', 'yellow');
+    logger.log(
+      'If you need the system to generate a domain name for you, you can configure host to auto ',
+      'yellow',
+    );
   }
   return domains;
 };

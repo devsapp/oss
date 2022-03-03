@@ -159,7 +159,7 @@ export async function put(ossClient: OssClient, staticPath: string, subDir: stri
 /**
  * domain
  * @param inputs
- * 全不变量植入domain组件，会报错，所以只获取domain相关的参数
+ * get  domain params
  */
 export async function bindDomain(inputs: InputProps, ossBucket: String) {
   const { props, Properties, ...rest } = inputs;

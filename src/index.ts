@@ -126,7 +126,7 @@ export default class OssComponent extends Base {
       if (isEmpty(customDomains)) {
         result.OssAddress = `https://oss.console.aliyun.com/bucket/${ossRegion}/${ossBucket}/object`;
       } else {
-        // 如果auto 修改 bucket
+        // auto === bucket
         const { domains: domainList, reportContent } = await bindDomain(inputs, ossBucket);
         // report oss response
         super.__report(reportContent);
@@ -159,15 +159,15 @@ oss:
     custom_domain: 
     ${domainStr}
 `;
+      console.log(finalMsg);
       if (!dnsRes.address) {
         const warnMsg = `
 ${colors.yellow('tips for domain')}
 ${colors.yellow('===============================')}
-${colors.yellow('* 正在为您绑定域名，预计花费1分钟')}
+${colors.yellow('* The domain name is in effect, please wait 10 minutes before visiting')}
 `;
         console.log(warnMsg);
       }
-      console.log(finalMsg);
       return;
     } catch (e) {
       logger.error('oss deployed aborted');

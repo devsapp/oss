@@ -8,7 +8,7 @@ export interface IAddDomainRecord {
 }
 export default class Client {
     /**
-     * 使用AK&SK初始化账号Client
+     * AK&SK Client
      * @param accessKeyId
      * @param accessKeySecret
      * @return Client
