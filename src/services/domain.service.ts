@@ -154,17 +154,17 @@ const generateSystemDomain = async (params: IDomainParams) => {
   const cdnClient = CdnService.createClient(credentials);
 
   // rest-api 返回 customDomain
-  const useJamstack = Boolean(props.customDomain);
-  if (useJamstack) {
-    inputs.props = { ...props, type: 'jamstack-oss' };
-  } else {
-    inputs.props = { ...props, type: 'oss' };
-  }
+  // const useJamstack = Boolean(props.customDomain);
+  // if (useJamstack) {
+  //   inputs.props = { ...props, type: 'jamstack-oss' };
+  // } else {
+  inputs.props = { ...props, type: 'oss' };
+  // }
   let sysDomain: string;
 
   for (let i = 0; i < 5; i++) {
     try {
-      sysDomain = await domainConponent[useJamstack ? 'jamstack' : 'get'](inputs);
+      sysDomain = await domainConponent['get'](inputs);
       break;
     } catch (e) {
       console.log('sysDomain---error', e);
@@ -179,10 +179,10 @@ const generateSystemDomain = async (params: IDomainParams) => {
   logger.debug(`Test Domain: ${sysDomain}`);
   await setDomainAdvancedConfig(cdnClient, { domain: sysDomain, hostObj });
 
-  // 添加边缘脚本
-  if (useJamstack) {
-    await setCdnDomainStagingConfig(cdnClient, { domain: sysDomain, fcDomain: props.customDomain });
-  }
+  // // 添加边缘脚本
+  // if (useJamstack) {
+  //   await setCdnDomainStagingConfig(cdnClient, { domain: sysDomain, fcDomain: props.customDomain });
+  // }
 
   logger.log(`\ndomainName: ${colors.cyan.underline(`http://${sysDomain}`)}`);
   return sysDomain;
