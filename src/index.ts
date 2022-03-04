@@ -41,12 +41,9 @@ export default class OssComponent extends Base {
       coreHelp(DEPLOY_HELP_INFO);
       return;
     }
-    let credentials = get(inputs, 'credentials');
-    if (isEmpty(credentials)) {
-      credentials = await getCredential(inputs, inputs.project.access);
-    }
+    let credentials = await getCredential(inputs, inputs.project.access);
     // common attribute
-    const { AccessKeyID, AccessKeySecret, AccountID: uid } = credentials;
+    const { AccessKeyID, AccessKeySecret, AccountID: uid, SecurityToken } = credentials;
     const region = get(inputs, 'props.region');
     const ossRegion = `oss-${region}`;
     const customDomains = get(inputs, 'props.customDomains', {});
@@ -67,6 +64,7 @@ export default class OssComponent extends Base {
       accessKeyId: AccessKeyID,
       accessKeySecret: AccessKeySecret,
       region: ossRegion,
+      stsToken: SecurityToken,
     };
     let ossClient = new OssClient(ossConfig);
     // bucket is existing?

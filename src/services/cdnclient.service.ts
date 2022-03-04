@@ -33,12 +33,13 @@ export default class Client {
    * @throws Exception
    */
   static createClient(credentials: ICredentials): Cdn20180510 {
-    const { accessKeyId, accessKeySecret } = credentials;
+    const { accessKeyId, accessKeySecret, securityToken } = credentials;
     const config = new $OpenApi.Config({
       // 您的AccessKey ID
       accessKeyId,
       // 您的AccessKey Secret
       accessKeySecret,
+      securityToken,
     });
     // 访问的域名
     config.endpoint = 'cdn.aliyuncs.com';

@@ -30,10 +30,11 @@ export default class Client {
    * @throws Exception
    */
   static createClient(credentials: ICredentials): Alidns20150109 {
-    const { accessKeyId, accessKeySecret } = credentials;
+    const { accessKeyId, accessKeySecret, securityToken } = credentials;
     const config = new $OpenApi.Config({
       accessKeyId,
       accessKeySecret,
+      securityToken
     });
     // 访问的域名
     config.endpoint = 'dns.aliyuncs.com';

@@ -243,6 +243,7 @@ export default async (orinalInputs) => {
   const credentials = {
     accessKeyId: get(inputs, 'Credentials.AccessKeyID'),
     accessKeySecret: get(inputs, 'Credentials.AccessKeySecret'),
+    securityToken:  get(inputs, 'Credentials.SecurityToken'),
   };
   const { hosts } = props;
   const domains = [];
