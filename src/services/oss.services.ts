@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import OssClient from 'ali-oss';
-import { spinner, inquirer, commandParse } from '@serverless-devs/core';
+import { spinner, inquirer, commandParse, CatchableError } from '@serverless-devs/core';
 import path from 'path';
 import { spawnSync } from 'child_process';
-import { logger } from '../common';
 import walkSync from 'walk-sync';
 import { InputProps, IDomainProps } from '../common/entity';
 import fs from 'fs-extra';
@@ -85,7 +84,7 @@ export async function bucketIsExisting(
   const assumeYes: boolean = argsData.y || argsData.assumeYes || argsData['assume-yes'];
   try {
     await client.getBucketInfo(bucket);
-    return true;
+    return;
   } catch (error) {
     if (error.name === 'NoSuchBucketError') {
       // NoSuchBucketError
@@ -108,14 +107,12 @@ export async function bucketIsExisting(
         await client.putBucket(bucket);
         await client.putBucketACL(bucket, ossAcl);
         createLoading.succeed(`The ${bucket} is created`);
-        return true;
+        return;
       } else {
-        logger.log(`The bucket ${bucket} is inexistent`, 'red');
+        throw new CatchableError(`The bucket ${bucket} is inexistent`);
       }
-    } else {
-      logger.log('GetBucketInfo Server is Error', 'red');
     }
-    return false;
+    throw new Error('GetBucketInfo Server is Error');
   }
 }
 
