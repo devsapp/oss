@@ -1,6 +1,7 @@
 export interface ICredentials {
   accessKeyId: string;
   accessKeySecret: string;
+  securityToken: string | undefined;
 }
 
 export interface IDomain {

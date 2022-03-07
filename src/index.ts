@@ -18,14 +18,13 @@ import {
   IHandleInputsRes,
 } from './services/oss.services';
 import { logger } from './common';
-import Base from './common/base';
 import { InputProps } from './common/entity';
 import { DEPLOY_HELP_INFO } from './common/contants';
 import { every, get, isEmpty } from 'lodash';
 import fs from 'fs-extra';
 
-const { reportComponent, getCredential, help: coreHelp } = cores;
-export default class OssComponent extends Base {
+const { getCredential, help: coreHelp } = cores;
+export default class OssComponent {
   /**
    * deploy
    * @param inputs
@@ -41,12 +40,9 @@ export default class OssComponent extends Base {
       coreHelp(DEPLOY_HELP_INFO);
       return;
     }
-    let credentials = get(inputs, 'credentials');
-    if (isEmpty(credentials)) {
-      credentials = await getCredential(inputs, inputs.project.access);
-    }
+    let credentials = await getCredential(inputs, inputs.project.access);
     // common attribute
-    const { AccessKeyID, AccessKeySecret, AccountID: uid } = credentials;
+    const { AccessKeyID, AccessKeySecret, AccountID: uid, SecurityToken } = credentials;
     const region = get(inputs, 'props.region');
     const ossRegion = `oss-${region}`;
     const customDomains = get(inputs, 'props.customDomains', {});
@@ -55,18 +51,16 @@ export default class OssComponent extends Base {
       logger.error('bucket is required For oss');
       return;
     } else if (ossBucket === 'auto') {
-      const serviceName = get(inputs, 'appName');
-      ossBucket = `serverless-devs-${ossRegion}-${serviceName}-${uid}`;
+      const serviceName = get(inputs, 'project.projectName');
+      ossBucket = `serverless-devs-${region}-${serviceName}-${uid}`;
     }
     const ossAcl = !isEmpty(customDomains) ? 'public-read' : get(inputs, 'props.acl', 'private');
-    reportComponent('oss', {
-      uid,
-      command: 'deploy',
-    });
+    
     const ossConfig: IOssConfig = {
       accessKeyId: AccessKeyID,
       accessKeySecret: AccessKeySecret,
       region: ossRegion,
+      stsToken: SecurityToken,
     };
     let ossClient = new OssClient(ossConfig);
     // bucket is existing?
@@ -123,7 +117,6 @@ export default class OssComponent extends Base {
         // 如果auto 修改 bucket
         const { domains: domainList, reportContent } = await bindDomain(inputs, ossBucket);
         // report oss response
-        super.__report(reportContent);
         result.Domains = domainList;
       }
       const message = every(result.Domains, (child) => isEmpty(child))
