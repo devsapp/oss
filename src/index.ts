@@ -63,8 +63,7 @@ export default class OssComponent {
     };
     let ossClient = new OssClient(ossConfig);
     // bucket is existing?
-    const isContinue = await bucketIsExisting(ossClient, ossBucket, ossAcl, argsData);
-    if (!isContinue) return;
+    await bucketIsExisting(ossClient, ossBucket, ossAcl, argsData);
     ossClient = new OssClient({
       ...ossConfig,
       bucket: ossBucket,
@@ -113,7 +112,7 @@ export default class OssComponent {
       result.OssAddress = `https://oss.console.aliyun.com/bucket/${ossRegion}/${ossBucket}/object`;
     } else {
       // 如果auto 修改 bucket
-      const { domains: domainList, reportContent } = await bindDomain(inputs, ossBucket);
+      const { domains: domainList } = await bindDomain(inputs, ossBucket);
       // report oss response
       result.Domains = domainList;
     }
