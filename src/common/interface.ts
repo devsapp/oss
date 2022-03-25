@@ -85,3 +85,21 @@ export interface IResBucket {
   remotePort?: string;
   requestUrls?: string;
 }
+
+export interface RemoveEndProps {
+  region: string;
+  assumeYes?: boolean;
+  onlyLocal?: boolean;
+  serviceName?: string;
+  functionName?: string;
+  qualifier?: string;
+  layerName?: string;
+  versionId?: string;
+  aliasName?: string;
+}
+export interface RemoveICredentials {
+  AccountID: string;
+  AccessKeyID: string;
+  AccessKeySecret: string;
+  SecurityToken?: string;
+}

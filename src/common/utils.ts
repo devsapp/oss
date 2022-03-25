@@ -7,11 +7,15 @@ import {
   IpFilterEnum,
   IOptimization,
   IRedirects,
+  RemoveICredentials,
 } from './interface';
-import { get, isFunction } from 'lodash';
+import { get, isFunction, isEmpty } from 'lodash';
 import chillout from 'chillout';
 import logger from './logger';
-import { spinner } from '@serverless-devs/core';
+import path from 'path';
+import * as core from '@serverless-devs/core';
+import os from 'os';
+import fs from 'fs';
 
 export const parseDomain = (domain: string): IDomain => {
   const arr = domain.split('.');
@@ -188,7 +192,7 @@ export const waitUntil = async (
   asyncService: () => Promise<any>,
   stopCondition: (result: any) => boolean,
   {
-    timeout = 10 * 60 * 1000, //10分超时时间
+    timeout = 10 * 60 * 1000, // 10分超时时间
     timeInterval = 1000,
     timeoutMsg,
     hint,
@@ -203,7 +207,7 @@ export const waitUntil = async (
     };
   },
 ) => {
-  const spin = hint && spinner(hint.loading);
+  const spin = hint && core.spinner(hint.loading);
   const startTime = new Date().getTime();
   let result: any;
   await chillout.waitUntil(async () => {
@@ -234,4 +238,35 @@ export function deepMap(target: Object, condition: String, callback: Function) {
       }
     }
   }
+}
+
+export async function updateCore() {
+  if (!isFunction(core.extend2)) {
+    try {
+      const homePath = isFunction(core.getRootHome) ? core.getRootHome() : os.homedir();
+      const corePath = path.join(homePath, 'cache', 'core');
+      const lockPath = path.resolve(corePath, '.s.lock');
+      const result = await core.request(
+        'https://registry.devsapp.cn/simple/devsapp/core/releases/latest',
+      );
+      const version = result.tag_name;
+      const url = `https://registry.devsapp.cn/simple/devsapp/core/zipball/${version}`;
+      const filename = `core@${version}.zip`;
+      await core.downloadRequest(url, corePath, { filename, extract: true, strip: 1 });
+      fs.writeFileSync(lockPath, JSON.stringify({ version }, null, 2));
+    } catch (error) {
+      logger.log(
+        "\nWARNING\n======================\n* Exception happened! Please execute 's clean --cache' and try again",
+        'yellow',
+      );
+      process.exit(1);
+    }
+  }
+}
+
+export async function getCredentials(credentials: RemoveICredentials, access: string) {
+  if (isEmpty(credentials)) {
+    return await core.getCredential(access);
+  }
+  return credentials;
 }

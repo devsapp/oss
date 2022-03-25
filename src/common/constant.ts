@@ -48,7 +48,7 @@ export const DEPLOY_HELP_INFO = [
   },
   {
     header: 'Usage',
-    content: '$ s deploy <options>',
+    content: ['$ s deploy <options>', '$ s remove <options>'],
   },
   {
     header: 'Options',
@@ -91,3 +91,129 @@ export const DEPLOY_HELP_INFO = [
     content: ['You can refer to the usage of s and execute [s -h] for help'],
   },
 ];
+
+export const REMOVE_HELP_INFO = [
+  {
+    header: 'Remove',
+    content:
+      'Specify RESOURCE to remove it and resource belonging to it.\n' +
+      'If {bold bucket} is specified, service and its functions should be removed.\n' +
+      'If {bold domain} is specified, you can specify the domain name to remove the specific domain or remove all domains without domain name.',
+  },
+  {
+    header: 'Usage',
+    content: '$ s remove <RESOURCE> <options>',
+  },
+  {
+    header: 'Resource',
+    optionList: [
+      {
+        name: 'bucket',
+        description: 'The bucket resource.',
+        type: String,
+      },
+      {
+        name: 'domain',
+        description: 'The domain resource.',
+        type: String,
+      },
+    ],
+  },
+  {
+    header: 'Options',
+    optionList: [
+      {
+        name: 'name',
+        typeLabel: '{underline <name>}',
+        description: 'Resource name to be removed, only for domain resource.',
+        alias: '-n',
+        type: String,
+      },
+    ],
+  },
+  {
+    header: 'Global Options',
+    optionList: [
+      {
+        name: 'assume-yes',
+        description: 'Assume that the answer to any question which would be asked is yes.',
+        alias: 'y',
+        type: Boolean,
+      },
+      {
+        name: 'help',
+        description: 'Help for rm.',
+        alias: 'h',
+        type: Boolean,
+      },
+    ],
+  },
+  {
+    header: 'Examples with Yaml',
+    content: [
+      '$ s {bold remove}',
+      '$ s <ProjectName> {bold remove}',
+      '$ s {bold remove} {underline bucket} [{bold --name} {underline name}]',
+      '$ s {bold remove} {underline domain} [{bold --name} {underline name}]',
+    ],
+  },
+  {
+    header: 'Examples with CLI',
+    content: ['You can refer to the usage of fc-api and execute [s cli fc-api -h] for help'],
+  },
+];
+export const globalParams = {
+  header: 'Global Options',
+  optionList: [
+    {
+      name: 'debug',
+      description: '[Optional] Output debug informations  ',
+      type: String,
+    },
+    {
+      name: 'help',
+      description: '[Optional] Help for command',
+      alias: 'h',
+      type: Boolean,
+    },
+    {
+      name: 'template',
+      description: '[Optional] Specify the template file',
+      alias: 't',
+      type: String,
+    },
+    {
+      name: 'access',
+      description: '[Optional] Specify key alias',
+      alias: 'a',
+      type: String,
+    },
+  ],
+};
+
+export const globalDescribe = {
+  header: 'Options Help',
+  content: [
+    { desc: 'Required: Required parameters in YAML mode and CLI mode' },
+    { desc: 'C-Required: Required parameters in CLI mode' },
+    { desc: 'Y-Required: Required parameters in Yaml mode' },
+    { desc: 'Optional: Non mandatory parameter' },
+    { desc: '✋ The difference between Yaml mode and CLI mode: http://ej6.net/yc' },
+  ],
+};
+
+export const assumeYesDescribe = {
+  name: 'assume-yes',
+  description: '[Optional] Assume that the answer to any question which would be asked is yes',
+  alias: 'y',
+  defaultOption: false,
+  type: Boolean,
+};
+
+export const regionDescribe = {
+  name: 'region',
+  description:
+    '[C-Required] Specify the fc region, value: cn-hangzhou/cn-beijing/cn-beijing/cn-hangzhou/cn-shanghai/cn-qingdao/cn-zhangjiakou/cn-huhehaote/cn-shenzhen/cn-chengdu/cn-hongkong/ap-southeast-1/ap-southeast-2/ap-southeast-3/ap-southeast-5/ap-northeast-1/eu-central-1/eu-west-1/us-west-1/us-east-1/ap-south-1',
+  defaultOption: false,
+  type: Boolean,
+};

@@ -1,5 +1,5 @@
 /// <reference types="jest" />
-import { IDomain, IReferer, ICertInfo, IIpFilter, RefererEnum, IpFilterEnum, IOptimization, IRedirects } from './interface';
+import { IDomain, IReferer, ICertInfo, IIpFilter, RefererEnum, IpFilterEnum, IOptimization, IRedirects, RemoveICredentials } from './interface';
 export declare const parseDomain: (domain: string) => IDomain;
 export declare function sleep(msec: any): Promise<unknown>;
 export declare function parseReferer(params: IReferer): {
@@ -67,3 +67,5 @@ export declare const waitUntil: (asyncService: () => Promise<any>, stopCondition
     };
 }) => Promise<any>;
 export declare function deepMap(target: Object, condition: String, callback: Function): void;
+export declare function updateCore(): Promise<void>;
+export declare function getCredentials(credentials: RemoveICredentials, access: string): Promise<any>;

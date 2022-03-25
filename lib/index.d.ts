@@ -9,4 +9,5 @@ export default class OssComponent extends Base {
     deploy(inputs: InputProps): Promise<{
         errMesg: any;
     }>;
+    remove(inputs: InputProps): Promise<void>;
 }

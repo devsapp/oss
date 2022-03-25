@@ -18,13 +18,14 @@ import {
   handleInputs,
   IHandleInputsRes,
 } from './services/oss.services';
-import { logger } from './common';
+import { logger } from './common'; // updateCore
 import Base from './common/base';
 import { InputProps } from './common/entity';
-import { DEPLOY_HELP_INFO } from './common/contants';
+import { DEPLOY_HELP_INFO } from './common/constant'; // REMOVE_HELP_INFO
 import { each, every, get, isEmpty } from 'lodash';
 import fs from 'fs-extra';
 import dns from 'dns';
+import Remove from './services/remove.services';
 
 const { reportComponent, getCredential, help: coreHelp, colors } = cores;
 export default class OssComponent extends Base {
@@ -175,5 +176,24 @@ ${colors.yellow('* The domain name is in effect, please wait 10 minutes before v
         errMesg: e,
       };
     }
+  }
+
+  async remove(inputs: InputProps) {
+    const inputsResult = await Remove.handlerInputs(inputs);
+    const { help, subCommand, errorMessage, props } = inputsResult;
+
+    if (errorMessage) {
+      throw new Error(errorMessage);
+    }
+    if (help) {
+      return;
+    }
+    await new Remove().remove(
+      {
+        props,
+        subCommand,
+      },
+      inputs,
+    );
   }
 }

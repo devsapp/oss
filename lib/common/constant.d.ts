@@ -36,10 +36,46 @@ export declare const DEPLOY_HELP_INFO: ({
     optionList?: undefined;
 } | {
     header: string;
+    content: string[];
+    optionList?: undefined;
+} | {
+    header: string;
     optionList: {
         name: string;
         description: string;
         type: BooleanConstructor;
+    }[];
+    content?: undefined;
+} | {
+    header: string;
+    optionList: {
+        name: string;
+        description: string;
+        alias: string;
+        type: BooleanConstructor;
+    }[];
+    content?: undefined;
+})[];
+export declare const REMOVE_HELP_INFO: ({
+    header: string;
+    content: string;
+    optionList?: undefined;
+} | {
+    header: string;
+    optionList: {
+        name: string;
+        description: string;
+        type: StringConstructor;
+    }[];
+    content?: undefined;
+} | {
+    header: string;
+    optionList: {
+        name: string;
+        typeLabel: string;
+        description: string;
+        alias: string;
+        type: StringConstructor;
     }[];
     content?: undefined;
 } | {
@@ -56,3 +92,41 @@ export declare const DEPLOY_HELP_INFO: ({
     content: string[];
     optionList?: undefined;
 })[];
+export declare const globalParams: {
+    header: string;
+    optionList: ({
+        name: string;
+        description: string;
+        type: StringConstructor;
+        alias?: undefined;
+    } | {
+        name: string;
+        description: string;
+        alias: string;
+        type: BooleanConstructor;
+    } | {
+        name: string;
+        description: string;
+        alias: string;
+        type: StringConstructor;
+    })[];
+};
+export declare const globalDescribe: {
+    header: string;
+    content: {
+        desc: string;
+    }[];
+};
+export declare const assumeYesDescribe: {
+    name: string;
+    description: string;
+    alias: string;
+    defaultOption: boolean;
+    type: BooleanConstructor;
+};
+export declare const regionDescribe: {
+    name: string;
+    description: string;
+    defaultOption: boolean;
+    type: BooleanConstructor;
+};
