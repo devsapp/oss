@@ -168,7 +168,7 @@ ${colors.yellow('* The domain name is in effect, please wait 10 minutes before v
 `;
         console.log(warnMsg);
       }
-      return;
+      return result;
     } catch (e) {
       logger.error('oss deployed aborted');
       return {
