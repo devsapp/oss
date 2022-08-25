@@ -6,7 +6,5 @@ export default class OssComponent {
      * @param inputs
      *
      */
-    deploy(inputs: InputProps): Promise<IOssRes | {
-        errMesg: any;
-    }>;
+    deploy(inputs: InputProps): Promise<IOssRes>;
 }

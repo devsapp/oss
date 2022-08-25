@@ -55,7 +55,7 @@ export declare function buildSpawnSync(hook: string, src: string): Promise<void>
  * bucket is existing?
  * @param : client, bucket, ossAcl = 'private'
  */
-export declare function bucketIsExisting(client: OssClient, bucket: string, ossAcl: ACLType, argsData: IHandleInputsRes): Promise<boolean>;
+export declare function bucketIsExisting(client: OssClient, bucket: string, ossAcl: ACLType, argsData: IHandleInputsRes): Promise<void>;
 /**
  * upload file
  * @param ossClient staticPath  subDir

@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import { loadComponent, colors, spinner } from '@serverless-devs/core';
+import { loadComponent, colors } from '@serverless-devs/core';
 import CdnService from './cdnclient.service';
 import DnsService from './dnsclient.service';
 import { logger, ICdnSource, IDomainParams, parseDomain, waitUntil, sleep } from '../common';
@@ -128,6 +128,7 @@ const setDomainAdvancedConfig = async (cdnClient, { domain, hostObj }) => {
   }
 };
 
+/**
 const setCdnDomainStagingConfig = async (cdnClient, { domain, fcDomain }) => {
   await CdnService.setEsStagingConfig(cdnClient, {
     domain,
@@ -145,7 +146,7 @@ const setCdnDomainStagingConfig = async (cdnClient, { domain, fcDomain }) => {
   }
   spin.succeed('edge script configured successfully');
 };
-
+*/
 // 生成系统域名
 const generateSystemDomain = async (params: IDomainParams) => {
   const { credentials, hostObj, inputs } = params;
