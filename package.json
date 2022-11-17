@@ -36,7 +36,7 @@
     "start": "rimraf lib && npx tsc -w -p tsconfig.json",
     "prebuild": "rm -rf lib && npm i",
     "build": "ncc build src/index.ts -m -e @serverless-devs/core -e @alicloud/openapi-client -o lib",
-    "prostbuild": "rm -rf node_modules && npm install --production",
+    "postbuild": "rm -rf node_modules && npm install --production",
     "test": "jest",
     "test:cov": "jest --coverage",
     "lint": "f2elint scan",
