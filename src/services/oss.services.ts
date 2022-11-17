@@ -36,6 +36,7 @@ export interface IOssStatic {
   index: string;
   error?: string;
   subDir?: ISubDir;
+  subDirType?: string;
 }
 export interface IOssRes {
   Bucket: string;

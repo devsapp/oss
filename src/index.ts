@@ -89,17 +89,18 @@ export default class OssComponent {
     await put(ossClient, ossSrc, ossSubDir);
     // update website
     const ossStatic: IOssStatic = get(inputs, 'props.website', {});
-    const { index = '', error = '', subDir = '' } = ossStatic;
+    const { index = '', error = '' } = ossStatic;
     const websiteConfig: IwebsiteConfig = { index, error };
-    if (subDir && subDir.type) {
-      // supportSubDir ?
+
+    const websiteConfigType = get(ossStatic, 'subDir.type', ossStatic.subDirType);
+    if (websiteConfigType) {
       websiteConfig.supportSubDir = true;
       const typeMap = {
         noSuchKey: 1,
         index: 2,
         redirect: 0,
       };
-      const subDirType = get(typeMap, subDir.type, 1);
+      const subDirType = get(typeMap, websiteConfigType, 1);
       websiteConfig.type = subDirType;
     }
     await ossClient.putBucketWebsite(ossBucket, websiteConfig);
