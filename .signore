@@ -1,3 +1,4 @@
+node_modules
 design
 .s
 tsconfig.json
@@ -19,8 +20,9 @@ package-lock.json
 .git
 
 README.md
-./example
-./test
-./Makefile
+example
+test
+src
+Makefile
 ./f2elint.config.js
 ./commitlint.config.js

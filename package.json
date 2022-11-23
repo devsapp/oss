@@ -27,17 +27,19 @@
     "ts-loader": "^8.0.14",
     "ts-node": "^9.1.1",
     "typescript": "^3.9.7",
-    "walk-sync": "^2.2.0"
+    "walk-sync": "^2.2.0",
+    "esbuild": "^0.13.8"
   },
   "scripts": {
     "start": "rimraf lib && npx tsc -w -p tsconfig.json",
-    "prebuild": "rm -rf lib && npm i",
-    "build": "ncc build src/index.ts -m -e @serverless-devs/core -e @alicloud/openapi-client -o lib",
+    "build": "npm run esbuild",
+    "esbuild": "esbuild src/index.ts --bundle --log-level=error --minify --platform=node --format=cjs --target=node10.4 --external:@serverless-devs/core --outfile=lib/index.js",
     "test": "jest",
     "test:cov": "jest --coverage",
     "lint": "f2elint scan",
     "fix": "f2elint fix",
     "typecheck": "npx tsc -p tsconfig.json --noEmit",
+    "publish": "s cli registry publish",
     "update": "rm -rf package-lock.json && rm -rf node_modules && npm install"
   },
   "husky": {
