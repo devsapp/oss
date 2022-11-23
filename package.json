@@ -30,6 +30,9 @@
     "walk-sync": "^2.2.0",
     "esbuild": "^0.13.8"
   },
+  "dependencies": {
+    "@alicloud/openapi-client": "^0.2.1"
+  },
   "scripts": {
     "start": "rimraf lib && npx tsc -w -p tsconfig.json",
     "build": "npm run esbuild",
@@ -54,8 +57,5 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
-  },
-  "dependencies": {
-    "@alicloud/openapi-client": "^0.2.1"
   }
 }
